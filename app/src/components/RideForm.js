@@ -125,6 +125,7 @@ class RideForm extends Component {
     render() {
         let button;
         let lable;
+        //Dynamic rendering
         if (this.state.operation === "edit") {
             button = <input className="btn bg-primary text-light" type="submit" value="Edit" disabled={this.state.proceedDisabled} onClick={this.editRide} />
             lable = <h1>Edit a ride</h1>
