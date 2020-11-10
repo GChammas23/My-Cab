@@ -124,17 +124,20 @@ class RideForm extends Component {
 
     render() {
         let button;
+        let lable;
         if (this.state.operation === "edit") {
             button = <input className="btn bg-primary text-light" type="submit" value="Edit" disabled={this.state.proceedDisabled} onClick={this.editRide} />
+            lable = <h1>Edit a ride</h1>
         }
         else {
             button = <input className="btn bg-primary text-light" type="submit" value="Proceed" disabled={this.state.proceedDisabled} onClick={this.insertNewRide} />
+            lable = <h1>Book a ride</h1>
         }
         return (
             <div className="App">
                 <NavbarComponent history={this.props.history} />
                 <div className="home-body">
-                    <h1>Book a ride</h1>
+                    {lable}
                     <p>Ride with us today!</p>
                     <p>Fill all the needed information below in order to book a ride</p>
                 </div>
