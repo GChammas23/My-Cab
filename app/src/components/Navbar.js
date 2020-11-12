@@ -48,7 +48,7 @@ class NavbarComponent extends Component {
 
     render() {
         return (
-            <Navbar bg="light" expand="xl">
+            <Navbar fixed="top" bg="light" expand="xl">
                 <Navbar.Brand href="/Home">My Cab</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
