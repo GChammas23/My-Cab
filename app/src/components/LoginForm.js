@@ -9,7 +9,7 @@ class LoginForm extends Component {
     constructor(props) {
         super(props);
         this.handleLogin = this.handleLogin.bind(this);
-        this.state = { username: '', password: '', rememberMe: false, passFieldType: "password", seePassToggle: false };
+        this.state = { username: '', password: '', rememberMe: false, passType: "password", checkPass: false };
     }
 
     componentDidMount() {
@@ -28,23 +28,21 @@ class LoginForm extends Component {
         this.setState({ password: event.target.value });
     };
 
-    handleCheckBoxChange = event => {
-        event.preventDefault();
-        this.setState({ rememberMe: event.target.checked });
+    handleCheckBoxChange = async (event) => {
+        let rememberMe = event.target.checked;
+        this.setState({ rememberMe });
     };
 
-    handlePassBoxChange = event => {
-        event.preventDefault();
-        console.log(this.state.seePassToggle);
-        if (!this.state.seePassToggle) {
-            this.setState({ seePassToggle: true });
-            this.setState({ passFieldType: "text" });
-
-        }
-        else {
-            this.setState({ seePassToggle: false });
-            this.setState({ passFieldType: "password" });
-        }
+    handlePassBoxChange = async (event) => {
+        let checkPass = event.target.checked;
+        this.setState({ checkPass }, () => {
+            if (checkPass) {
+                this.setState({ passType: "text" });
+            }
+            else {
+                this.setState({ passType: "password" });
+            }
+        })
     };
     async handleLogin(event) {
         event.preventDefault();
@@ -92,11 +90,17 @@ class LoginForm extends Component {
                             </div>
                             <div className="form-group row">
                                 <label className="form-label">Password:</label>
-                                <input className="form-control" type={this.state.passFieldType} onChange={this.handlePasswordChange} id="pass" name="password" placeholder='Enter password' required size="10" /><br />
-                                <FormCheck label="See password" className="passCheckbox" checked={this.state.seePassToggle} onChange={this.handlePassBoxChange} ></FormCheck>
+                                <input className="form-control" type={this.state.passType} onChange={this.handlePasswordChange} id="pass" name="password" placeholder='Enter password' required size="10" /><br />
+                                <label>
+                                    See password:
+                                    <input name="seePass" type="checkbox" checked={this.state.checkPass} onChange={this.handlePassBoxChange} />
+                                </label>
                             </div>
                             <div>
-                                <FormCheck checked={this.state.rememberMe} onChange={this.handleCheckBoxChange} label="Remember me"></FormCheck>
+                                <label>
+                                    Remember me
+                                    <input name="remember" type="checkbox" checked={this.state.rememberMe} onChange={this.handleCheckBoxChange} />
+                                </label>
                             </div>
                             <input className="btn bg-primary text-light" type="submit" value="Login" />
                             <h6>Don't have an account? <Link className="App-link" to="/Signup">Click here to start!</Link></h6>
