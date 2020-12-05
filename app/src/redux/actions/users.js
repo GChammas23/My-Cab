@@ -1,5 +1,5 @@
 import { getUser, deleteUser, createUser, findUsername } from '../../actions/users.actions';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 export const GET_USER_STARTED = 'GET_USER_STARTED'
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS'

@@ -2,21 +2,23 @@ import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import NavbarComponent from './Navbar';
 import Footer from './Footer';
-import { getPrices } from '../actions/prices.action';
-
+import { connect } from 'react-redux';
+import pricesAction from '../redux/actions/prices';
 class PricingsTable extends Component {
     constructor(props) {
         super(props);
+        this.getPrices = this.getPrices.bind(this);
         this.state = { data: [] };
     }
 
     componentDidMount() {
         //Fill up the data array in state
-        getPrices().then(res => {
-            this.setState({ data: res });
-        }).catch(err => {
-            console.log("Unable to load prices " + err);
-        })
+        this.getPrices();
+        console.log(this.props.prices);
+    }
+
+    async getPrices() {
+        await this.props.dispatch(pricesAction.getPrices());
     }
 
     priceFormat(cell, row) {
@@ -33,7 +35,7 @@ class PricingsTable extends Component {
                     <p>Below is the table of the pricings of our rides. Click on the price column to sort the results</p>
                 </div>
                 <div className="table-bg">
-                    <BootstrapTable data={this.state.data.res} striped hover condensed pagination search >
+                    <BootstrapTable data={this.props.prices} striped hover condensed pagination search >
                         <TableHeaderColumn dataField='Price_id' isKey={true}>ID</TableHeaderColumn>
                         <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
                         <TableHeaderColumn dataField='dest_address'>Destination address</TableHeaderColumn>
@@ -47,4 +49,8 @@ class PricingsTable extends Component {
 
 }
 
-export default PricingsTable;
+const mapStateToProps = state => ({
+    prices: state.pricesReducer.prices,
+})
+
+export default connect(mapStateToProps)(PricingsTable);

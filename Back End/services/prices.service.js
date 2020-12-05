@@ -15,6 +15,7 @@ exports.getPricings = (request, response) => {
             }
             else {
                 response.status(200).send({ message: "Pricings found successfully!", res: result });
+                console.log(result);
             }
         });
         db.close();
