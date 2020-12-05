@@ -3,15 +3,18 @@ import '../App.css';
 import { Link } from 'react-router-dom';
 import { getUser } from '../actions/users.actions';
 import { FormCheck } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import actions from '../redux/actions/users';
 
 class LoginForm extends Component {
     constructor(props) {
         super(props);
+        this.handleLogin = this.handleLogin.bind(this);
         this.state = { username: '', password: '', rememberMe: false, passFieldType: "password", seePassToggle: false };
     }
 
     componentDidMount() {
-        if (localStorage.length !== 0) {
+        if (localStorage.getItem("username")) {
             this.props.history.push("/Home");
         }
     }
@@ -43,9 +46,8 @@ class LoginForm extends Component {
             this.setState({ seePassToggle: false });
             this.setState({ passFieldType: "password" });
         }
-    }
-
-    handleLogin = event => {
+    };
+    async handleLogin(event) {
         event.preventDefault();
         const { username } = this.state;
         const { password } = this.state;
@@ -64,11 +66,15 @@ class LoginForm extends Component {
             sessionStorage.setItem('password', password);
         }
 
-        getUser(account).then(res => {
-            this.props.history.push("/Home")
-        }).catch(err => {
-            alert("The account with the entered username and password could not be found!");
-        });
+        await this.props.dispatch(actions.getUser(account));
+
+        if (this.props.didLogin) {
+            this.props.history.push("/Home");
+        }
+        else {
+            alert("The username or password entered are invalid!");
+        }
+
     }
 
 
@@ -103,4 +109,8 @@ class LoginForm extends Component {
     };
 }
 
-export default LoginForm;
+const mapStateToProps = state => ({
+    didLogin: state.userReducer.didLogin,
+})
+
+export default connect(mapStateToProps)(LoginForm);

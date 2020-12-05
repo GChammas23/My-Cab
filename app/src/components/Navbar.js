@@ -15,7 +15,7 @@ class NavbarComponent extends Component {
 
     getUsernameFromStorage() {
         let user_username;
-        if (localStorage.length !== 0) {
+        if (localStorage.getItem("username")) {
             user_username = localStorage.getItem('username');
         }
         else {
