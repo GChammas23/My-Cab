@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { Link } from 'react-router-dom';
-import { FormCheck } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import actions from '../redux/actions/users';
 
@@ -91,7 +90,7 @@ class LoginForm extends Component {
                             <div className="form-group row">
                                 <label className="form-label">Password:</label>
                                 <input className="form-control" type={this.state.passType} onChange={this.handlePasswordChange} id="pass" name="password" placeholder='Enter password' required size="10" /><br />
-                                <label>
+                                <label className="passCheckbox">
                                     See password:
                                     <input name="seePass" type="checkbox" checked={this.state.checkPass} onChange={this.handlePassBoxChange} />
                                 </label>

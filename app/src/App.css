@@ -12,6 +12,8 @@
   width: 100%;
 }
 
+
+
 .nav-link :active{
   text-decoration: underline;
 }
@@ -45,10 +47,6 @@ body{
 
 #logo_image {
   margin-top: 30px;
-}
-
-.passCheckbox{
-  margin-left: 700px;
 }
 
 .App-logo {

@@ -12,7 +12,7 @@ class CreateUser extends Component {
         const clientID = '680623846718-6uhe7mj085j9di8uq6nba1olk7s31dl3.apps.googleusercontent.com'; //Client id for google auth
         this.insertNewUser = this.insertNewUser.bind(this);
         this.googleSuccess = this.googleSuccess.bind(this);
-        this.state = { Name: '', Age: 0, Username: '', Password: '', ConfPassword: '', users: [], clientId: clientID };
+        this.state = { Name: '', Age: 0, Username: '', Password: '', ConfPassword: '', clientId: clientID, checkPass: false, passType: "password", checkConfPass: false, confPassType: "password" };
     }
 
     componentDidMount() {
@@ -41,6 +41,31 @@ class CreateUser extends Component {
         event.preventDefault();
         this.setState({ ConfPassword: event.target.value });
     };
+
+    handlePassBoxChange = async (event) => {
+        if (event.target.name === "seePass") {
+            let checkPass = event.target.checked;
+            this.setState({ checkPass }, () => {
+                if (checkPass) {
+                    this.setState({ passType: "text" });
+                }
+                else {
+                    this.setState({ passType: "password" });
+                }
+            });
+        }
+        else if (event.target.name === "seeConfPass") {
+            let checkConfPass = event.target.checked;
+            this.setState({ checkConfPass }, () => {
+                if (checkConfPass) {
+                    this.setState({ confPassType: "text" });
+                }
+                else {
+                    this.setState({ confPassType: "password" });
+                }
+            })
+        }
+    }
 
     async googleSuccess(res) {
         console.log(res);
@@ -102,7 +127,7 @@ class CreateUser extends Component {
             //Check if both passwords are the same
             if (Password === ConfPassword) {
                 //Check if username is already in use
-                await this.props.dispatch(actions.findUsername({username: Username}));
+                await this.props.dispatch(actions.findUsername({ username: Username }));
                 if (this.props.usernameFound) {
                     alert("The username chosen is already in use!");
                 }
@@ -157,17 +182,25 @@ class CreateUser extends Component {
                             </div>
                             <div className="form-group row">
                                 <label className="form-label">Password:</label>
-                                <input className="form-control" type="password" id="password" aria-describedby="passwordHelpBlock" name="password" placeholder='Enter password' required size="10" onChange={this.handlePasswordChange} /><br />
+                                <input className="form-control" type={this.state.passType} id="password" aria-describedby="passwordHelpBlock" name="password" placeholder='Enter password' required size="10" onChange={this.handlePasswordChange} /><br />
                                 <small id="passwordHelpBlock" className="pass-text">
                                     Your password must contain between 8 to 20 characters.
                                 </small>
+                                <label style={{ marginLeft: 525 }}>
+                                    See password:
+                                    <input name="seePass" type="checkbox" checked={this.state.checkPass} onChange={this.handlePassBoxChange} />
+                                </label>
                             </div>
                             <div className="form-group row">
                                 <label className="form-label">Confirm password:</label>
-                                <input className="form-control" type="password" id="confPassword" aria-describedby="confasswordHelpBlock" name="confPassword" placeholder='Confirm password' required size="10" onChange={this.handleConfPasswordChange} /><br />
+                                <input className="form-control" type={this.state.confPassType} id="confPassword" aria-describedby="confasswordHelpBlock" name="confPassword" placeholder='Confirm password' required size="10" onChange={this.handleConfPasswordChange} /><br />
                                 <small id="confpasswordHelpBlock" className="pass-text">
                                     Please make sure to match both passwords!
                                 </small>
+                                <label style={{ marginLeft: 600 }}>
+                                    See password:
+                                    <input name="seeConfPass" type="checkbox" checked={this.state.checkConfPass} onChange={this.handlePassBoxChange} />
+                                </label>
                             </div>
                             <input className="btn bg-primary text-light" type="submit" value="Sign up" />
                         </form>
