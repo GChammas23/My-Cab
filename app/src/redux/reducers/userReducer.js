@@ -15,6 +15,10 @@ import {
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
 
+  UPDATE_PASS_STARTED,
+  UPDATE_PASS_SUCCESS,
+  UPDATE_PASS_ERROR,
+
 } from "../actions/users";
 
 const defaultState = {
@@ -24,6 +28,7 @@ const defaultState = {
   didCreate: false,
   accountFound: false,
   usernameFound: false,
+  didUpdate: false,
 };
 
 function userReducer(state = defaultState, action) {
@@ -74,6 +79,22 @@ function userReducer(state = defaultState, action) {
         isLoading: false,
         didCreate: false,
         createMessage: action.payload.message,
+      });
+
+    case UPDATE_PASS_STARTED:
+      return Object.assign({}, state, {
+        isLoading: true,
+        didUpdate: false,
+      });
+    case UPDATE_PASS_SUCCESS:
+      return Object.assign({}, state, {
+        isLoading: false,
+        didUpdate: true,
+      });
+    case UPDATE_PASS_ERROR:
+      return Object.assign({}, state, {
+        isLoading: false,
+        didUpdate: false,
       });
 
     case DELETE_USER_STARTED:

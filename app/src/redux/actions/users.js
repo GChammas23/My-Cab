@@ -1,9 +1,13 @@
-import { getUser, deleteUser, createUser, findUsername } from '../../actions/users.actions';
+import { getUser, deleteUser, createUser, findUsername , updateUserPass} from '../../actions/users.actions';
 import { toast } from 'react-toastify';
 
 export const GET_USER_STARTED = 'GET_USER_STARTED'
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS'
 export const GET_USER_ERROR = 'GET_USER_ERROR'
+
+export const UPDATE_PASS_STARTED = 'UPDATE_PASS_STARTED'
+export const UPDATE_PASS_SUCCESS = 'UPDATE_PASS_SUCCESS'
+export const UPDATE_PASS_ERROR = 'UPDATE_PASS_ERROR'
 
 export const FIND_USERNAME_STARTED = 'FIND_USERNAME_STARTED'
 export const FIND_USERNAME_SUCCESS = 'FIND_USERNAME_SUCCESS'
@@ -49,6 +53,22 @@ const usersActions = {
       toast.error('ERROR FINDING USERNAME' + error)
       dispatch({
         type: FIND_USERNAME_ERROR,
+      });
+    }
+  },
+
+  updatePass: (data) => async (dispatch) => {
+    try {
+      dispatch({
+        type: UPDATE_PASS_STARTED,
+      });
+      await updateUserPass(data);
+      dispatch({
+        type: UPDATE_PASS_SUCCESS,
+      });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_PASS_ERROR,
       });
     }
   },

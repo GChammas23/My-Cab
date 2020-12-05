@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import { updateUserPass } from '../actions/users.actions';
 import NavbarComponent from './Navbar';
+import { connect } from 'react-redux';
+import actions from '../redux/actions/users';
 
 class ResetPass extends Component {
     constructor(props) {
         super(props);
+        this.changePass = this.changePass.bind(this);
         this.state = { username: '', password: '', confPassword: '' };
     }
 
     componentDidMount() {
         let user_username;
-        if (localStorage.length !== 0) {
+        if (localStorage.getItem("username")) {
             user_username = localStorage.getItem("username");
             this.setState({ isLoggedIn: true });
         }
-        else if (sessionStorage.length !== 0) {
+        else if (sessionStorage.getItem("username")) {
             user_username = sessionStorage.getItem("username");
             this.setState({ isLoggedIn: true });
         }
@@ -31,21 +34,26 @@ class ResetPass extends Component {
         this.setState({ confPassword: event.target.value });
     }
 
-    changePass = event => {
+    async changePass(event) {
         event.preventDefault();
 
-        //Check if both passwords have the required length
-        if ((this.state.password.length >= 8 && this.state.password.length <= 20) &&
-            (this.state.confPassword.length >= 8 && this.state.confPassword.length <= 20)) {
-            //Check if both passwords match
-            if (this.state.password === this.state.confPassword) {
-                updateUserPass({ username: this.state.username, password: this.state.password }).then(res => {
-                    alert("Password updated successfully!");
-                    this.props.history.push("/Home");
+        const { password } = this.state;
+        const { confPassword } = this.state;
+        const { username } = this.state;
 
-                }).catch(error => {
-                    alert("An error occured while trying to update your password: " + error);
-                })
+        //Check if both passwords have the required length
+        if ((password.length >= 8 && password.length <= 20) &&
+            (confPassword.length >= 8 && confPassword.length <= 20)) {
+            //Check if both passwords match
+            if (password === confPassword) {
+                await this.props.dispatch(actions.updatePass({ username: username, password: password }));
+
+                if (this.props.didUpdate) {
+                    alert("Your password has been successfully updated!");
+                }
+                else {
+                    alert("An error occured while trying to update your password");
+                }
             }
             else {
                 alert("Please make sure that both passwords match!");
@@ -90,4 +98,8 @@ class ResetPass extends Component {
     }
 }
 
-export default ResetPass;
+const mapStateToProps = state => ({
+    didUpdate: state.userReducer.didUpdate,
+})
+
+export default connect(mapStateToProps)(ResetPass);
