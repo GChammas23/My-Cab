@@ -1,9 +1,13 @@
-import { getUser, deleteUser, createUser } from '../../actions/users.actions';
+import { getUser, deleteUser, createUser, findUsername } from '../../actions/users.actions';
 import { toast } from 'react-toastify'
 
 export const GET_USER_STARTED = 'GET_USER_STARTED'
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS'
 export const GET_USER_ERROR = 'GET_USER_ERROR'
+
+export const FIND_USERNAME_STARTED = 'FIND_USERNAME_STARTED'
+export const FIND_USERNAME_SUCCESS = 'FIND_USERNAME_SUCCESS'
+export const FIND_USERNAME_ERROR = 'FIND_USERNAME_ERROR'
 
 export const CREATE_USER_STARTED = 'CREATE_USER_STARTED'
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS'
@@ -31,6 +35,24 @@ const usersActions = {
       });
     }
   },
+
+  findUsername: (username) => async (dispatch) => {
+    try {
+      dispatch({
+        type: FIND_USERNAME_STARTED,
+      });
+      await findUsername(username)
+      dispatch({
+        type: FIND_USERNAME_SUCCESS,
+      });
+    } catch (error) {
+      toast.error('ERROR FINDING USERNAME' + error)
+      dispatch({
+        type: FIND_USERNAME_ERROR,
+      });
+    }
+  },
+
 
   deleteUser: (data) => async (dispatch) => {
     try {

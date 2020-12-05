@@ -1,26 +1,21 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { Link } from 'react-router-dom';
-import { createUser, getUsers } from '../actions/users.actions';
-import { GoogleLogin } from 'react-google-login'
+import { GoogleLogin } from 'react-google-login';
+import { connect } from 'react-redux';
+import actions from '../redux/actions/users';
+
 
 class CreateUser extends Component {
     constructor(props) {
         super(props);
         const clientID = '680623846718-6uhe7mj085j9di8uq6nba1olk7s31dl3.apps.googleusercontent.com'; //Client id for google auth
         this.insertNewUser = this.insertNewUser.bind(this);
-        this.checkUsernameUsage = this.checkUsernameUsage.bind(this);
+        this.googleSuccess = this.googleSuccess.bind(this);
         this.state = { Name: '', Age: 0, Username: '', Password: '', ConfPassword: '', users: [], clientId: clientID };
     }
 
     componentDidMount() {
-        getUsers().then(res => {
-            this.setState({ users: res }, () => {
-                console.log(res);
-            });
-        }).catch(err => {
-            console.log("Error finding users " + err);
-        })
     }
 
     handleNameChange = event => {
@@ -47,20 +42,7 @@ class CreateUser extends Component {
         this.setState({ ConfPassword: event.target.value });
     };
 
-    checkUsernameUsage() {
-        for (let i = 0; i < this.state.users.length; i++) {
-            let obj = this.state.users[i];
-
-            console.log(obj);
-
-            if (obj.username === this.state.Username) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    googleSuccess = res => {
+    async googleSuccess(res) {
         console.log(res);
 
         let user = {
@@ -74,18 +56,23 @@ class CreateUser extends Component {
         this.setState({ Password: user.pass });
         this.setState({ ConfPassword: user.pass });
 
-        if (!this.checkUsernameUsage) {
-            createUser(user).then(res => {
-                alert("Account created! Your username is: " + user.Username + " and your password is: " + user.pass + ". MAKE SURE TO CHANGE YOUR PASSWORD!");
-                localStorage.setItem('username', user.Username);
-                localStorage.setItem('password', user.pass);
-                this.props.history.push("/Home");
-            }).catch(err => {
-                alert("An error occured while logging in using google " + err);
-            })
+        await this.props.dispatch(actions.getUser(user));
+
+        if (this.props.isFound) {
+            alert("An account with this google account is already created! please consider logging in instead!");
         }
         else {
-            alert("An account with this google account is already created!")
+            await this.props.dispatch(actions.createUser(user));
+
+            if (this.props.didCreate) {
+                alert("Account created! Your username is: " + user.Username + " and your password is your family name. Please consider changing your password as soon as possible!");
+                localStorage.setItem("username", user.Username);
+                localStorage.setItem("password", user.pass);
+                this.props.history.push("/Home");
+            }
+            else {
+                alert("An error occured while trying to create an account with the selected google account!");
+            }
         }
 
     }
@@ -95,7 +82,7 @@ class CreateUser extends Component {
         alert("Failed to authenticate with google! Consider signing in with our sign up form.")
     }
 
-    insertNewUser = event => {
+    async insertNewUser(event) {
         event.preventDefault();
         const { Name } = this.state;
         const { Age } = this.state;
@@ -103,31 +90,35 @@ class CreateUser extends Component {
         const { Password } = this.state;
         const { ConfPassword } = this.state;
 
+        let account = {
+            name: Name,
+            age: Age,
+            Username: Username,
+            pass: Password,
+        }
+
         //Check if passwords length is valid
         if (Password.length >= 8 && Password.length <= 20) {
             //Check if both passwords are the same
             if (Password === ConfPassword) {
                 //Check if username is already in use
-                if (this.checkUsernameUsage()) {
+                await this.props.dispatch(actions.findUsername({username: Username}));
+                if (this.props.usernameFound) {
                     alert("The username chosen is already in use!");
                 }
                 else {
                     //Call the actions method
-                    createUser({
-                        name: Name,
-                        age: Age,
-                        Username: Username,
-                        pass: Password,
-                    }).then(res => {
-                        if (sessionStorage.length !== 0 || localStorage.length !== 0) {
-                            sessionStorage.clear();
-                            localStorage.clear();
-                        }
-                        alert("Account created successfully!");
-                        this.props.history.push('/');
-                    }).catch((err) => {
-                        alert("An error occured while trying to add the user " + err);
-                    })
+                    await this.props.dispatch(actions.createUser(account));
+
+                    if (this.props.didCreate) {
+                        alert("Account successfully created! Redirecting to home page...");
+                        sessionStorage.setItem("username", account.Username);
+                        sessionStorage.setItem("password", account.pass);
+                        this.props.history.push("/Home");
+                    }
+                    else {
+                        alert("An error occured while trying to create the account!");
+                    }
                 }
 
             }
@@ -188,4 +179,9 @@ class CreateUser extends Component {
     }
 }
 
-export default CreateUser;
+const mapStateToProps = state => ({
+    usernameFound: state.userReducer.usernameFound,
+    didCreate: state.userReducer.didCreate,
+})
+
+export default connect(mapStateToProps)(CreateUser);

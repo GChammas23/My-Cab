@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { Link } from 'react-router-dom';
-import { getUser } from '../actions/users.actions';
 import { FormCheck } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import actions from '../redux/actions/users';
@@ -68,7 +67,7 @@ class LoginForm extends Component {
 
         await this.props.dispatch(actions.getUser(account));
 
-        if (this.props.isFound) {
+        if (this.props.accountFound) {
             this.props.history.push("/Home");
         }
         else {
@@ -110,7 +109,7 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    isFound: state.userReducer.isFound,
+    accountFound: state.userReducer.accountFound,
 })
 
 export default connect(mapStateToProps)(LoginForm);

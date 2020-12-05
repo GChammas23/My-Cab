@@ -7,6 +7,10 @@ import {
   CREATE_USER_SUCCESS,
   CREATE_USER_ERROR,
 
+  FIND_USERNAME_STARTED,
+  FIND_USERNAME_SUCCESS,
+  FIND_USERNAME_ERROR,
+
   DELETE_USER_STARTED,
   DELETE_USER_SUCCESS,
   DELETE_USER_ERROR,
@@ -18,7 +22,8 @@ const defaultState = {
   delMessage: '',
   createMessage: '',
   didCreate: false,
-  isFound: false,
+  accountFound: false,
+  usernameFound: false,
 };
 
 function userReducer(state = defaultState, action) {
@@ -30,12 +35,27 @@ function userReducer(state = defaultState, action) {
     case GET_USER_SUCCESS:
       return Object.assign({}, state, {
         isLoading: false,
-        isFound: true,
+        accountFound: true,
       });
     case GET_USER_ERROR:
       return Object.assign({}, state, {
         isLoading: false,
-        isFound: false,
+        accountFound: false,
+      });
+
+    case FIND_USERNAME_STARTED:
+      return Object.assign({}, state, {
+        isLoading: true,
+      });
+    case FIND_USERNAME_SUCCESS:
+      return Object.assign({}, state, {
+        isLoading: false,
+        usernameFound: true,
+      });
+    case FIND_USERNAME_ERROR:
+      return Object.assign({}, state, {
+        isLoading: false,
+        usernameFound: false,
       });
 
     case CREATE_USER_STARTED:

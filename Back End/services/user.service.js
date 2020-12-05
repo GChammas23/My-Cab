@@ -1,5 +1,6 @@
 const { ObjectID } = require("mongodb");
 let db = require("../database");
+const { use } = require("../routes/user.routes");
 
 let client = db.getClient();
 let url = db.getUrl();
@@ -19,6 +20,32 @@ exports.getUser = (request, response) => {
     if (err) throw err;
     let dbo = db.db(databaseName);
     dbo.collection(collectionName).find(account).toArray(function (err, result) {
+      if (err) {
+        response.status(500).send({ message: "An error occured while trying to find the account" });
+      }
+      else {
+        if (result.length === 1) {
+          response.status(200).send({ message: "Account found successfully!", res: result });
+        }
+        else {
+          response.status(500).send({ message: "The account couldn't be found!", res: result });
+        }
+      }
+
+    });
+  })
+};
+
+
+exports.findUsername = (request, response) => {
+  const { username } = request.body;
+
+  console.log(username);
+
+  client.connect(url, (err, db) => {
+    if (err) throw err;
+    let dbo = db.db(databaseName);
+    dbo.collection(collectionName).find({username: username}).toArray(function (err, result) {
       if (err) {
         response.status(500).send({ message: "An error occured while trying to find the account" });
       }

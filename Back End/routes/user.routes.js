@@ -9,6 +9,7 @@ router.get('/users', users.getUsers);
 router.post('/user', users.getUser);
 router.post('/deleteUser', users.deleteUser);
 router.post('/updatePass', users.updatePass);
+router.post('/findUsername', users.findUsername);
 
 
 module.exports = router

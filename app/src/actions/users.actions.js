@@ -32,6 +32,11 @@ async function updateUserPass(data) {
   return await axios.post(url, data).then(response => response.data);
 }
 
+async function findUsername(username) {
+  const url = `${baseURLApi}/users/findUsername`;
+  return await axios.post(url, username).then(response => response.data);
+}
+
 
 
 export {
@@ -40,4 +45,5 @@ export {
   createUser,
   deleteUser,
   updateUserPass,
+  findUsername,
 };
