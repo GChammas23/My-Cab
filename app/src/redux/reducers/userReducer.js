@@ -18,7 +18,7 @@ const defaultState = {
   delMessage: '',
   createMessage: '',
   didCreate: false,
-  didLogin: false,
+  isFound: false,
 };
 
 function userReducer(state = defaultState, action) {
@@ -30,12 +30,12 @@ function userReducer(state = defaultState, action) {
     case GET_USER_SUCCESS:
       return Object.assign({}, state, {
         isLoading: false,
-        didLogin: true,
+        isFound: true,
       });
     case GET_USER_ERROR:
       return Object.assign({}, state, {
         isLoading: false,
-        didLogin: false,
+        isFound: false,
       });
 
     case CREATE_USER_STARTED:

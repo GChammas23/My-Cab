@@ -68,7 +68,7 @@ class LoginForm extends Component {
 
         await this.props.dispatch(actions.getUser(account));
 
-        if (this.props.didLogin) {
+        if (this.props.isFound) {
             this.props.history.push("/Home");
         }
         else {
@@ -110,7 +110,7 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    didLogin: state.userReducer.didLogin,
+    isFound: state.userReducer.isFound,
 })
 
 export default connect(mapStateToProps)(LoginForm);
