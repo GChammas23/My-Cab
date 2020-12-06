@@ -12,13 +12,18 @@ import {
     DELETE_DATA_SUCCESS,
     DELETE_DATA_ERROR,
 
+    DELETE_RECORD_STARTED,
+    DELETE_RECORD_SUCCESS,
+    DELETE_RECORD_ERROR,
+
 } from "../actions/records";
 
 const defaultState = {
     isLoading: false,
     rides: [],
     reservations: [],
-    recordsDeleted: false,
+    dataDeleted: false,
+    recordDeleted: false,
 };
 
 function recordReducer(state = defaultState, action) {
@@ -58,17 +63,33 @@ function recordReducer(state = defaultState, action) {
         case DELETE_DATA_STARTED:
             return Object.assign({}, state, {
                 isLoading: true,
-                recordsDeleted: false,
+                dataDeleted: false,
             });
         case DELETE_DATA_SUCCESS:
             return Object.assign({}, state, {
                 isLoading: false,
-                recordsDeleted: true,
+                dataDeleted: true,
             });
         case DELETE_DATA_ERROR:
             return Object.assign({}, state, {
                 isLoading: false,
-                recordsDeleted: false,
+                dataDeleted: false,
+            });
+
+        case DELETE_RECORD_STARTED:
+            return Object.assign({}, state, {
+                isLoading: true,
+                recordDeleted: false,
+            });
+        case DELETE_RECORD_SUCCESS:
+            return Object.assign({}, state, {
+                isLoading: false,
+                recordDeleted: true,
+            });
+        case DELETE_RECORD_ERROR:
+            return Object.assign({}, state, {
+                isLoading: false,
+                recordDeleted: false,
             });
         default:
             return state;

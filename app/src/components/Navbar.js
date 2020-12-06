@@ -40,8 +40,9 @@ class NavbarComponent extends Component {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link onClick={this.rideForm} className="nav-link">Book a ride</Nav.Link>
-                        <Nav.Link href="/Reservations">Your reservations</Nav.Link>
-                        <Nav.Link href="/Rides">Your rides</Nav.Link>
+                        <Nav.Link href="/Reservations">My reservations</Nav.Link>
+                        <Nav.Link href="/Rides">My rides</Nav.Link>
+                        <Nav.Link href="/Expenses">My expenses</Nav.Link>
                         <Nav.Link href="/Pricings">Pricings</Nav.Link>
                         <NavDropdown title="Account" id="basic-nav-dropdown">
                             <NavDropdown.Item>{this.state.username}</NavDropdown.Item>

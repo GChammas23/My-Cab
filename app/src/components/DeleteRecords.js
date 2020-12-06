@@ -2,6 +2,9 @@ import Alert from 'react-bootstrap/Alert';
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { deleteUserRecord } from '../actions/rides.action';
+import { connect } from 'react-redux';
+import recordAction from '../redux/actions/records';
+import recordsAction from '../redux/actions/records';
 
 class DeleteRecord extends Component {
     constructor(props) {
@@ -26,23 +29,26 @@ class DeleteRecord extends Component {
         }
     }
 
-    deleteRecord = event => {
+    async deleteRecord(event) {
         event.preventDefault();
         console.log(this.state.type);
         console.log(this.state.object);
 
-        deleteUserRecord({ data: this.state.object }).then(res => {
-            alert("Reservation successfully deleted!");
-            if (this.state.type === "reservation") {
-                this.props.history.push("/Reservations");
-            }
-            else if (this.state.type === "ride") {
-                this.props.history.push("/Rides");
-            }
+       await this.props.dispatch(recordsAction.deleteRecord({data: this.state.object}));
 
-        }).catch(error => {
-            alert("An error occured while deleting your reservation: " + error);
-        });
+       if(this.props.recordDeleted){
+           if(this.state.type === "reservation"){
+               alert("Reservation successfully deleted!");
+               this.props.history.push("/Reservations");
+           }
+           else if(this.state.type === "ride"){
+                alert("Ride successfully deleted!");
+                this.props.history.push("/Rides");
+           }
+       }
+       else{
+           alert("An error occured while trying to delete the record. Please try again later");
+       }
 
     }
 
@@ -78,4 +84,8 @@ class DeleteRecord extends Component {
     }
 }
 
-export default DeleteRecord;
+const mapStateToProps = state => ({
+    recordDeleted: state.recordReducer.recordDeleted,
+})
+
+export default connect(mapStateToProps)(DeleteRecord);

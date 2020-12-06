@@ -1,4 +1,4 @@
-import { getUserReservation, getUserRides, deletUserData } from '../../actions/rides.action';
+import { getUserReservation, getUserRides, deletUserData, deleteUserRecord } from '../../actions/rides.action';
 
 export const GET_RIDES_STARTED = 'GET_RIDES_STARTED'
 export const GET_RIDES_SUCCESS = 'GET_RIDES_SUCCESS'
@@ -11,6 +11,10 @@ export const GET_RESERVATIONS_ERROR = 'GET_RESERVATIONS_ERROR'
 export const DELETE_DATA_STARTED = 'DELETE_DATA_STARTED'
 export const DELETE_DATA_SUCCESS = 'DELETE_DATA_SUCCESS'
 export const DELETE_DATA_ERROR = 'DELETE_DATA_ERROR'
+
+export const DELETE_RECORD_STARTED = 'DELETE_RECORD_STARTED'
+export const DELETE_RECORD_SUCCESS = 'DELETE_RECORD_SUCCESS'
+export const DELETE_RECORD_ERROR = 'DELETE_RECORD_ERROR'
 
 
 const recordsAction = {
@@ -68,6 +72,22 @@ const recordsAction = {
         } catch (error) {
             dispatch({
                 type: DELETE_DATA_ERROR,
+            });
+        }
+    },
+
+    deleteRecord: (data) => async (dispatch) => {
+        try {
+            dispatch({
+                type: DELETE_RECORD_STARTED,
+            });
+             await deleteUserRecord(data);
+            dispatch({
+                type: DELETE_RECORD_SUCCESS,
+            });
+        } catch (error) {
+            dispatch({
+                type: DELETE_RECORD_ERROR,
             });
         }
     },

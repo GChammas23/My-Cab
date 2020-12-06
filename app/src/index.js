@@ -16,6 +16,7 @@ import AboutUs from './components/AboutUs';
 import PricingsTable from './components/PricingsTable';
 import Reservations from './components/Reservations';
 import DeleteRecords from './components/DeleteRecords';
+import Graph from './components/Graph';
 
 import { Provider } from 'react-redux';
 import { configureStore, configurePersistor } from './redux/store/store';
@@ -48,6 +49,7 @@ class RouterNavigationSample extends React.Component {
               <Route path="/Pricings" render={(props) => <PricingsTable {...props} />} />
               <Route path="/Reservations" render={(props) => <Reservations {...props} />} />
               <Route path="/Delete" render={(props) => <DeleteRecords {...props} />} />
+              <Route path="/Expenses" render={(props) => <Graph {...props} />} />
             </>
           </div>
         </Router>

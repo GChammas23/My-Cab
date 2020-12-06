@@ -1,8 +1,6 @@
 import Alert from 'react-bootstrap/Alert';
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { deleteUser } from '../actions/users.actions';
-import { deletUserData } from '../actions/rides.action';
 import { connect } from 'react-redux';
 import userAction from '../redux/actions/users';
 import recordsAction from '../redux/actions/records';
@@ -39,7 +37,7 @@ class DeleteAccount extends Component {
 
         await this.props.dispatch(recordsAction.deleteUserData(account));
 
-        if(this.props.recordsDeleted){
+        if(this.props.dataDeleted){
             await this.props.dispatch(userAction.deleteUser(account));
             if(this.props.accountDeleted){
                 alert("Account successfully deleted! You will be redirected to the login page.");
@@ -79,7 +77,7 @@ class DeleteAccount extends Component {
 
 const mapStateToProps = state => ({
     accountDeleted: state.userReducer.accountDeleted,
-    recordsDeleted: state.recordReducer.recordsDeleted,
+    dataDeleted: state.recordReducer.dataDeleted,
 })
 
 export default connect(mapStateToProps)(DeleteAccount);

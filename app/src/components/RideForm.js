@@ -3,15 +3,15 @@ import { Button } from 'react-bootstrap';
 import Calendar from 'react-calendar';
 import Footer from './Footer';
 import NavbarComponent from './Navbar';
-import { getRidePrice } from '../actions/prices.action';
 import { addRide, updateUserReservation } from '../actions/rides.action';
-
-let moment = require("moment");
+import { connect } from 'react-redux';
+import pricesAction from '../redux/actions/prices';
 
 
 class RideForm extends Component {
     constructor(props) {
         super(props);
+        this.checkPrice = this.checkPrice.bind(this);
         this.state = {
             operation: null, object: null,
             username: '', start: '', dest: '', price: 0,
@@ -45,7 +45,11 @@ class RideForm extends Component {
 
     handleDestAddress = event => {
         event.preventDefault();
-        this.setState({ dest: event.target.value });
+        this.setState({ dest: event.target.value }, () => {
+            if(this.state.dest.length === 0){
+                this.setState({proceedDisabled: true});
+            }
+        });
     }
 
     changeDate = date => {
@@ -58,7 +62,7 @@ class RideForm extends Component {
         const { dest } = this.state;
         const { ride_date } = this.state;
         const { username } = this.state;
-        const { price } = this.state;
+        const  price = this.props.ridePrice;
 
         let ride = {
             start_address: start,
@@ -72,10 +76,11 @@ class RideForm extends Component {
             alert("You have successfully booked your ride with us! See you later!");
         }).catch(err => {
             alert("An error occured while trying to add the ride " + err);
-        })
+        });
+
     }
 
-    checkPrice = event => {
+    async checkPrice(event) {
         event.preventDefault();
         let start = this.state.start;
         let dest = this.state.dest;
@@ -83,12 +88,14 @@ class RideForm extends Component {
         start = start.charAt(0).toUpperCase() + start.substr(1);
         dest = dest.charAt(0).toUpperCase() + dest.substr(1);
 
-        getRidePrice({ start: start, dest: dest }).then(res => {
-            this.setState({ price: res.res[0].price });
+        await this.props.dispatch(pricesAction.getRidePrice({ start: start, dest: dest }));
+
+        if (this.props.ridePrice !== 0) {
             this.setState({ proceedDisabled: false });
-        }).catch(err => {
-            alert("Couldn't find the price of the ride. Please check the pricings list to see where we drive!");
-        })
+        }
+        else {
+            alert("An error occured while trying to find the price of the ride! Please make sure that the start and destination addresses are valid");
+        }
 
     }
 
@@ -152,7 +159,7 @@ class RideForm extends Component {
                             <Button onClick={this.checkPrice} style={{ marginTop: "20px" }}>Check ride price</Button>
                             <div className="form-group row">
                                 <label className="form-label">Ride price:</label>
-                                <input className="form-control" type="text" id="price" aria-describedby="priceHelpBlock" name="price" readOnly={true} required size="10" value={"$" + this.state.price || ""} /><br />
+                                <input className="form-control" type="text" id="price" aria-describedby="priceHelpBlock" name="price" readOnly={true} required size="10" value={"$" + this.props.ridePrice || ""} /><br />
                                 <small id="priceHelpBlock" className="pass-text">
                                     Click on the above button to see the price
                                 </small>
@@ -167,4 +174,9 @@ class RideForm extends Component {
     };
 }
 
-export default RideForm;
+const mapStateToProps = state => ({
+    ridePrice: state.pricesReducer.ridePrice,
+    recordsDeleted: state.recordReducer.recordsDeleted,
+})
+
+export default connect(mapStateToProps)(RideForm);

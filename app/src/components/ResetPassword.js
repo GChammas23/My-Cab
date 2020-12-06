@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { updateUserPass } from '../actions/users.actions';
 import NavbarComponent from './Navbar';
 import { connect } from 'react-redux';
 import actions from '../redux/actions/users';
