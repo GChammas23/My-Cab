@@ -7,6 +7,27 @@ let collection = db.getRidesCollection();
 let url = db.getUrl();
 let databaseName = db.getDatabase();
 
+exports.getUserReservations = (request, response) => {
+    const { user_username } = request.body;
+
+    console.log(user_username);
+
+    client.connect(url, (err, db) => {
+        if (err) throw err;
+        let dbo = db.db(databaseName);
+        dbo.collection(collection).find({ user_username: user_username, ride_date: { $gte: new Date() } }).toArray((err, result) => {
+            if (err) {
+                response.status(500).send({ message: "An error occured while fetching the rides", error: err });
+            }
+            else {
+                response.status(200).send({ message: "Rides found successfully", res: result });
+                console.log(result);
+            }
+        })
+        db.close();
+    });
+};
+
 exports.getUserRides = (request, response) => {
     const { user_username } = request.body;
 
@@ -15,7 +36,7 @@ exports.getUserRides = (request, response) => {
     client.connect(url, (err, db) => {
         if (err) throw err;
         let dbo = db.db(databaseName);
-        dbo.collection(collection).find({ user_username: user_username }).toArray((err, result) => {
+        dbo.collection(collection).find({ user_username: user_username, ride_date: { $lte: new Date() } }).toArray((err, result) => {
             if (err) {
                 response.status(500).send({ message: "An error occured while fetching the rides", error: err });
             }
@@ -40,7 +61,7 @@ exports.addRide = (request, response) => {
         start_address: start_address,
         destination_address: destination_address,
         ride_price: ride_price,
-        ride_date: ride_date,
+        ride_date: new Date(ride_date),
     };
 
     client.connect(url, (err, db) => {

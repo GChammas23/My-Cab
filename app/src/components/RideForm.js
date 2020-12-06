@@ -6,6 +6,8 @@ import NavbarComponent from './Navbar';
 import { getRidePrice } from '../actions/prices.action';
 import { addRide, updateUserReservation } from '../actions/rides.action';
 
+let moment = require("moment");
+
 
 class RideForm extends Component {
     constructor(props) {
@@ -18,14 +20,7 @@ class RideForm extends Component {
     }
 
     componentDidMount() {
-        let user_username;
-        if (localStorage.length !== 0) {
-            //Retrieve username of user in localstorage 
-            user_username = localStorage.getItem("username");
-        }
-        else {
-            user_username = sessionStorage.getItem("username");
-        }
+        let user_username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
 
         if (this.props.location.state.data !== null) {
             this.setState({ operation: this.props.location.state.operation });
@@ -70,7 +65,7 @@ class RideForm extends Component {
             destination_address: dest,
             ride_price: price,
             user_username: username,
-            ride_date: ride_date
+            ride_date: ride_date,
         }
 
         addRide(ride).then(res => {

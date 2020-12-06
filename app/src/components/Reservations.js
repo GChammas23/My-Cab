@@ -3,51 +3,34 @@ import '../App.css';
 import Footer from './Footer';
 import NavbarComponent from './Navbar';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { getUserRides } from '../actions/rides.action';
 import { Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import ridesAction from '../redux/actions/rides';
 
 let moment = require("moment");
 
 class Reservations extends Component {
     constructor(props) {
         super(props);
-        this.sortRidesByDate = this.sortRidesByDate.bind(this);
         this.dateFormat = this.dateFormat.bind(this);
         this.priceFormat = this.priceFormat.bind(this);
         this.editFormat = this.editFormat.bind(this);
         this.deleteFormat = this.deleteFormat.bind(this);
         this.editReservation = this.editReservation.bind(this);
         this.deleteReservation = this.deleteReservation.bind(this);
-        this.state = { username: '', data: [], allRides: [] };
+        this.getReservations = this.getReservations.bind(this);
+        this.state = { username: '' };
     }
     componentDidMount() {
-        let user_username;
-        if (localStorage.length !== 0) {
-            user_username = localStorage.getItem("username");
-        }
-        else {
-            user_username = sessionStorage.getItem("username");
-        }
-        this.setState({ username: user_username });
-
-        getUserRides({ user_username: user_username }).then(res => {
-            this.setState({ allRides: res.res });
-            this.sortRidesByDate(this.state.allRides);
-        }).catch(error => {
-            console.log("Error occured while fetchind rides " + error);
+        let user_username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
+        this.setState({ username: user_username }, () => {
+            this.getReservations();
         });
 
     };
 
-    sortRidesByDate(ridesArray) {
-        let reservations = [];
-        for (let i = 0; i < ridesArray.length; i++) {
-            let date = moment(ridesArray[i].ride_date).toDate();
-            if (date > new Date()) {
-                reservations.push(ridesArray[i]);
-            }
-        }
-        this.setState({ data: reservations });
+    async getReservations() {
+        await this.props.dispatch(ridesAction.getUserReservations({ user_username: this.state.username }));
     }
 
     dateFormat(cell) {
@@ -95,7 +78,7 @@ class Reservations extends Component {
                     <p>Check your upcoming reservations you have with us! You can sort the reservations by date or price.</p>
                 </div>
                 <div className="table-bg">
-                    <BootstrapTable data={this.state.data} striped hover condensed pagination search >
+                    <BootstrapTable data={this.props.reservations} striped hover condensed pagination search >
                         <TableHeaderColumn dataField='_id' isKey={true}>ID</TableHeaderColumn>
                         <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
                         <TableHeaderColumn dataField='destination_address'>Destination</TableHeaderColumn>
@@ -111,4 +94,8 @@ class Reservations extends Component {
     };
 }
 
-export default Reservations;
+const mapStateToProps = state => ({
+    reservations: state.ridesReducer.reservations,
+})
+
+export default connect(mapStateToProps)(Reservations);

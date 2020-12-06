@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Button } from 'react-bootstrap'
-import { getUserRides } from '../actions/rides.action';
 import NavbarComponent from './Navbar';
 import Footer from './Footer';
 import '../App.css';
+import { connect } from 'react-redux';
+import ridesAction from '../redux/actions/rides';
 
 let moment = require('moment');
 
 class RidesTable extends Component {
     constructor(props) {
         super(props);
-        this.sortRidesByDate = this.sortRidesByDate.bind(this);
         this.priceFormat = this.priceFormat.bind(this);
         this.dateFormat = this.dateFormat.bind(this);
         this.deleteFormat = this.deleteFormat.bind(this);
@@ -20,36 +20,15 @@ class RidesTable extends Component {
     }
 
     componentDidMount() {
-        let user_username;
-        if (localStorage.length !== 0) {
-            //Get username from localstorage
-            user_username = localStorage.getItem("username");
-        }
-        else {
-            user_username = sessionStorage.getItem("username");
-        }
-        console.log(user_username);
-        this.setState({ username: user_username });
-
-        //Fill array of rides of the user by calling the actions method
-        getUserRides({ user_username }).then(res => {
-            console.log(res.res);
-            this.setState({ data: res.res });
-            this.sortRidesByDate(this.state.data);
-        }).catch(err => {
-            alert("Unable to load user rides" + err);
+        let user_username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
+        this.setState({ username: user_username }, () => {
+            this.getRides();
         });
+
     }
 
-    sortRidesByDate(ridesArray) {
-        let rideHistory = [];
-        for (let i = 0; i < ridesArray.length; i++) {
-            let date = moment(ridesArray[i].ride_date).toDate();
-            if (date < new Date()) {
-                rideHistory.push(ridesArray[i]);
-            }
-        }
-        this.setState({ rides: rideHistory });
+    async getRides() {
+        await this.props.dispatch(ridesAction.getUserRides({ user_username: this.state.username }));
     }
 
     dateFormat(cell) {
@@ -84,7 +63,7 @@ class RidesTable extends Component {
                     <p>Below are all the rides that you had made with us! Click on the ride date column to sort the rides</p>
                 </div>
                 <div className="table-bg">
-                    <BootstrapTable data={this.state.rides} striped hover condensed pagination search>
+                    <BootstrapTable data={this.props.rides} striped hover condensed pagination search>
                         <TableHeaderColumn isKey={true} dataField='_id'>ID</TableHeaderColumn>
                         <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
                         <TableHeaderColumn dataField='destination_address'>Destination address</TableHeaderColumn>
@@ -99,4 +78,8 @@ class RidesTable extends Component {
     }
 }
 
-export default RidesTable;
+const mapStateToProps = state => ({
+    rides: state.ridesReducer.rides,
+})
+
+export default connect(mapStateToProps)(RidesTable);

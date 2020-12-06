@@ -10,6 +10,11 @@ async function getUserRides(data) {
     return await axios.post(url, data).then(response => response.data);
 }
 
+async function getUserReservation(data) {
+    const url = `${baseURLApi}/rides/getReservations`;
+    return await axios.post(url, data).then(response => response.data);
+}
+
 async function deleteUserRecord(data) {
     const url = `${baseURLApi}/rides/deleteReservation`;
     return await axios.post(url, data).then(response => response.data);
@@ -35,5 +40,6 @@ export {
     deleteUserRecord,
     addRide,
     deletUserData,
-    updateUserReservation
+    updateUserReservation,
+    getUserReservation,
 };

@@ -12,15 +12,7 @@ class ResetPass extends Component {
     }
 
     componentDidMount() {
-        let user_username;
-        if (localStorage.getItem("username")) {
-            user_username = localStorage.getItem("username");
-            this.setState({ isLoggedIn: true });
-        }
-        else if (sessionStorage.getItem("username")) {
-            user_username = sessionStorage.getItem("username");
-            this.setState({ isLoggedIn: true });
-        }
+        let user_username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
         this.setState({ username: user_username });
     }
 
