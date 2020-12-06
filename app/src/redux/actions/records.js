@@ -9,7 +9,7 @@ export const GET_RESERVATIONS_SUCCESS = 'GET_RESERVATIONS_SUCCESS'
 export const GET_RESERVATIONS_ERROR = 'GET_RESERVATIONS_ERROR'
 
 
-const ridesAction = {
+const recordsAction = {
 
     getUserReservations: (username) => async (dispatch) => {
         try {
@@ -50,4 +50,4 @@ const ridesAction = {
     },
 };
 
-export default ridesAction;
+export default recordsAction;

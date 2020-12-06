@@ -8,7 +8,7 @@ import {
     GET_RESERVATIONS_SUCCESS,
     GET_RESERVATIONS_ERROR,
 
-} from "../actions/rides";
+} from "../actions/records";
 
 const defaultState = {
     isLoading: false,
@@ -16,7 +16,7 @@ const defaultState = {
     reservations: [],
 };
 
-function ridesReducer(state = defaultState, action) {
+function recordReducer(state = defaultState, action) {
     switch (action.type) {
         case GET_RIDES_STARTED:
             return Object.assign({}, state, {
@@ -54,4 +54,4 @@ function ridesReducer(state = defaultState, action) {
     }
 }
 
-export default ridesReducer;
+export default recordReducer;

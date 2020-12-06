@@ -5,7 +5,7 @@ import NavbarComponent from './Navbar';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import ridesAction from '../redux/actions/rides';
+import recordsAction from '../redux/actions/records';
 
 let moment = require("moment");
 
@@ -30,7 +30,7 @@ class Reservations extends Component {
     };
 
     async getReservations() {
-        await this.props.dispatch(ridesAction.getUserReservations({ user_username: this.state.username }));
+        await this.props.dispatch(recordsAction.getUserReservations({ user_username: this.state.username }));
     }
 
     dateFormat(cell) {
@@ -95,7 +95,7 @@ class Reservations extends Component {
 }
 
 const mapStateToProps = state => ({
-    reservations: state.ridesReducer.reservations,
+    reservations: state.recordReducer.reservations,
 })
 
 export default connect(mapStateToProps)(Reservations);

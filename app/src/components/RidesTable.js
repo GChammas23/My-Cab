@@ -5,7 +5,7 @@ import NavbarComponent from './Navbar';
 import Footer from './Footer';
 import '../App.css';
 import { connect } from 'react-redux';
-import ridesAction from '../redux/actions/rides';
+import recordsAction from '../redux/actions/records';
 
 let moment = require('moment');
 
@@ -28,7 +28,7 @@ class RidesTable extends Component {
     }
 
     async getRides() {
-        await this.props.dispatch(ridesAction.getUserRides({ user_username: this.state.username }));
+        await this.props.dispatch(recordsAction.getUserRides({ user_username: this.state.username }));
     }
 
     dateFormat(cell) {
@@ -79,7 +79,7 @@ class RidesTable extends Component {
 }
 
 const mapStateToProps = state => ({
-    rides: state.ridesReducer.rides,
+    rides: state.recordReducer.rides,
 })
 
 export default connect(mapStateToProps)(RidesTable);
