@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { deleteUser } from '../actions/users.actions';
 import { deletUserData } from '../actions/rides.action';
+import { connect } from 'react-redux';
+import userAction from '../redux/actions/users';
+import recordsAction from '../redux/actions/records';
 
 class DeleteAccount extends Component {
     constructor(props) {
@@ -12,17 +15,8 @@ class DeleteAccount extends Component {
     }
 
     componentDidMount() {
-        let user_username;
-        let pass;
-
-        if (localStorage.length !== 0) {
-            user_username = localStorage.getItem("username");
-            pass = localStorage.getItem("password");
-        }
-        else {
-            user_username = sessionStorage.getItem("username");
-            pass = sessionStorage.getItem("password");
-        }
+        let user_username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
+        let pass = localStorage.getItem("password") ? localStorage.getItem("password") : sessionStorage.getItem("password");
 
         this.setState({ username: user_username });
         this.setState({ password: pass });
@@ -34,7 +28,7 @@ class DeleteAccount extends Component {
         this.props.history.push("/Home");
     }
 
-    deleteAccount = event => {
+    async deleteAccount(event) {
         event.preventDefault();
         //Create an object from the state
 
@@ -43,21 +37,23 @@ class DeleteAccount extends Component {
             pass: this.state.password,
         };
 
-        deletUserData(account).then(res => {
-            console.log(res);
-            deleteUser(account).then(res => {
-                alert("Your account has been successfully deleted. Redirecting to login....");
-                if (localStorage.length !== 0 || sessionStorage.length !== 0) {
-                    localStorage.clear();
-                    sessionStorage.clear();
-                }
+        await this.props.dispatch(recordsAction.deleteUserData(account));
+
+        if(this.props.recordsDeleted){
+            await this.props.dispatch(userAction.deleteUser(account));
+            if(this.props.accountDeleted){
+                alert("Account successfully deleted! You will be redirected to the login page.");
+                localStorage.clear();
+                sessionStorage.clear();
                 this.props.history.push("/");
-            }).catch(err => {
-                alert("An error occured while deleting the user " + err);
-            })
-        }).catch(err => {
-            alert("An error occured while delete the user's data! " + err);
-        })
+            }
+            else{
+                alert("An error occured while trying to delete your account!");
+            }
+        }
+        else{
+            alert("An error occured while trying to delete the records related to your account!");
+        }
 
     }
 
@@ -81,4 +77,9 @@ class DeleteAccount extends Component {
     }
 }
 
-export default DeleteAccount;
+const mapStateToProps = state => ({
+    accountDeleted: state.userReducer.accountDeleted,
+    recordsDeleted: state.recordReducer.recordsDeleted,
+})
+
+export default connect(mapStateToProps)(DeleteAccount);

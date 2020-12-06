@@ -104,7 +104,7 @@ exports.deleteReservation = (request, response) => {
     })
 }
 
-exports.deletAllUseData = (request, respone) => {
+exports.deletAllUserData = (request, respone) => {
     const { username } = request.body;
 
     client.connect(url, (err, db) => {

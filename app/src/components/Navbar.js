@@ -14,27 +14,13 @@ class NavbarComponent extends Component {
     };
 
     getUsernameFromStorage() {
-        let user_username;
-        if (localStorage.getItem("username")) {
-            user_username = localStorage.getItem('username');
-        }
-        else {
-            user_username = sessionStorage.getItem('username');
-        }
-
+        let user_username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
         this.setState({ username: user_username });
     }
 
     logOutUser() {
-        if (localStorage.length !== 0) {
-            //Log out the user and delete all info from localstorage
-            localStorage.clear();
-        }
-        else {
-            sessionStorage.clear();
-        }
-
-
+        localStorage.clear();
+        sessionStorage.clear();
         this.props.history.push('/');
     }
 

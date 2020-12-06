@@ -8,12 +8,17 @@ import {
     GET_RESERVATIONS_SUCCESS,
     GET_RESERVATIONS_ERROR,
 
+    DELETE_DATA_STARTED,
+    DELETE_DATA_SUCCESS,
+    DELETE_DATA_ERROR,
+
 } from "../actions/records";
 
 const defaultState = {
     isLoading: false,
     rides: [],
     reservations: [],
+    recordsDeleted: false,
 };
 
 function recordReducer(state = defaultState, action) {
@@ -48,6 +53,22 @@ function recordReducer(state = defaultState, action) {
             return Object.assign({}, state, {
                 isLoading: false,
                 reservations: [],
+            });
+
+        case DELETE_DATA_STARTED:
+            return Object.assign({}, state, {
+                isLoading: true,
+                recordsDeleted: false,
+            });
+        case DELETE_DATA_SUCCESS:
+            return Object.assign({}, state, {
+                isLoading: false,
+                recordsDeleted: true,
+            });
+        case DELETE_DATA_ERROR:
+            return Object.assign({}, state, {
+                isLoading: false,
+                recordsDeleted: false,
             });
         default:
             return state;

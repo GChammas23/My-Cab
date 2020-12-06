@@ -29,6 +29,7 @@ const defaultState = {
   accountFound: false,
   usernameFound: false,
   didUpdate: false,
+  accountDeleted: false,
 };
 
 function userReducer(state = defaultState, action) {
@@ -100,16 +101,18 @@ function userReducer(state = defaultState, action) {
     case DELETE_USER_STARTED:
       return Object.assign({}, state, {
         isLoading: true,
+        accountDeleted: false,
       });
     case DELETE_USER_SUCCESS:
       return Object.assign({}, state, {
         isLoading: false,
-        delMessage: 'DELETED SUCCESSFULLY',
+        delMessage: action.payload.message,
+        accountDeleted: true,
       });
     case DELETE_USER_ERROR:
       return Object.assign({}, state, {
         isLoading: false,
-        delMessage: 'UNABLE TO DELETE.',
+        accountDeleted: false,
       });
     default:
       return state;
