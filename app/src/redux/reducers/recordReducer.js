@@ -8,6 +8,14 @@ import {
     GET_RESERVATIONS_SUCCESS,
     GET_RESERVATIONS_ERROR,
 
+    ADD_RIDE_STARTED,
+    ADD_RIDE_SUCCESS,
+    ADD_RIDE_ERROR,
+
+    UPDATE_RESERVATION_STARTED,
+    UPDATE_RESERVATION_SUCCESS,
+    UPDATE_RESERVATION_ERROR,
+
     DELETE_DATA_STARTED,
     DELETE_DATA_SUCCESS,
     DELETE_DATA_ERROR,
@@ -24,6 +32,8 @@ const defaultState = {
     reservations: [],
     dataDeleted: false,
     recordDeleted: false,
+    rideAdded: false,
+    reservationUpdated: true,
 };
 
 function recordReducer(state = defaultState, action) {
@@ -42,6 +52,38 @@ function recordReducer(state = defaultState, action) {
             return Object.assign({}, state, {
                 isLoading: false,
                 rides: [],
+            });
+
+        case ADD_RIDE_STARTED:
+            return Object.assign({}, state, {
+                isLoading: true,
+                rideAdded: false,
+            });
+        case ADD_RIDE_SUCCESS:
+            return Object.assign({}, state, {
+                isLoading: false,
+                rideAdded: true,
+            });
+        case ADD_RIDE_ERROR:
+            return Object.assign({}, state, {
+                isLoading: false,
+                rideAdded: false,
+            });
+
+        case UPDATE_RESERVATION_STARTED:
+            return Object.assign({}, state, {
+                isLoading: true,
+                reservationUpdated: false,
+            });
+        case UPDATE_RESERVATION_SUCCESS:
+            return Object.assign({}, state, {
+                isLoading: false,
+                reservationUpdated: true,
+            });
+        case UPDATE_RESERVATION_ERROR:
+            return Object.assign({}, state, {
+                isLoading: false,
+                reservationUpdated: false,
             });
 
         case GET_RESERVATIONS_STARTED:

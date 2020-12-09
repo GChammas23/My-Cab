@@ -1,9 +1,7 @@
 import Alert from 'react-bootstrap/Alert';
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { deleteUserRecord } from '../actions/rides.action';
 import { connect } from 'react-redux';
-import recordAction from '../redux/actions/records';
 import recordsAction from '../redux/actions/records';
 
 class DeleteRecord extends Component {

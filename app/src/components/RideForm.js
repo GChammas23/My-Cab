@@ -6,12 +6,15 @@ import NavbarComponent from './Navbar';
 import { addRide, updateUserReservation } from '../actions/rides.action';
 import { connect } from 'react-redux';
 import pricesAction from '../redux/actions/prices';
+import recordsAction from '../redux/actions/records';
 
 
 class RideForm extends Component {
     constructor(props) {
         super(props);
         this.checkPrice = this.checkPrice.bind(this);
+        this.insertNewRide = this.insertNewRide.bind(this);
+        this.editRide = this.editRide.bind(this);
         this.state = {
             operation: null, object: null,
             username: '', start: '', dest: '', price: 0,
@@ -46,8 +49,8 @@ class RideForm extends Component {
     handleDestAddress = event => {
         event.preventDefault();
         this.setState({ dest: event.target.value }, () => {
-            if(this.state.dest.length === 0){
-                this.setState({proceedDisabled: true});
+            if (this.state.dest.length === 0) {
+                this.setState({ proceedDisabled: true });
             }
         });
     }
@@ -56,13 +59,13 @@ class RideForm extends Component {
         this.setState({ ride_date: date })
     }
 
-    insertNewRide = event => {
+    async insertNewRide(event) {
         event.preventDefault();
         const { start } = this.state;
         const { dest } = this.state;
         const { ride_date } = this.state;
         const { username } = this.state;
-        const  price = this.props.ridePrice;
+        const price = this.props.ridePrice;
 
         let ride = {
             start_address: start,
@@ -72,11 +75,14 @@ class RideForm extends Component {
             ride_date: ride_date,
         }
 
-        addRide(ride).then(res => {
-            alert("You have successfully booked your ride with us! See you later!");
-        }).catch(err => {
-            alert("An error occured while trying to add the ride " + err);
-        });
+        await this.props.dispatch(recordsAction.addRide(ride));
+
+        if (this.props.rideAdded) {
+            alert("You successfully booked a ride with us. See you soon!")
+        }
+        else {
+            alert("An error occured while trying to add a ride. Please try again")
+        }
 
     }
 
@@ -94,12 +100,13 @@ class RideForm extends Component {
             this.setState({ proceedDisabled: false });
         }
         else {
-            alert("An error occured while trying to find the price of the ride! Please make sure that the start and destination addresses are valid");
+            alert("An error occured while trying to find the price of the ride! \
+            Please make sure that the start and destination addresses are valid");
         }
 
     }
 
-    editRide = event => {
+    async editRide(event) {
         event.preventDefault();
         const { start } = this.state;
         const { dest } = this.state;
@@ -117,11 +124,15 @@ class RideForm extends Component {
 
         console.log(ride);
 
-        updateUserReservation(ride).then(res => {
-            alert("Ride updated successfully!");
-        }).catch(err => {
-            alert("An error occured while updating the ride info. " + err);
-        })
+        await this.props.dispatch(recordsAction.updateReservation(ride));
+
+        if(this.props.reservationUpdated){
+            alert("Your reservation has been successfully updated!")
+        }
+        else{
+            alert("An error occured while trying to update your reservation");
+        }
+
     }
 
     render() {
@@ -176,7 +187,8 @@ class RideForm extends Component {
 
 const mapStateToProps = state => ({
     ridePrice: state.pricesReducer.ridePrice,
-    recordsDeleted: state.recordReducer.recordsDeleted,
+    rideAdded: state.recordReducer.rideAdded,
+    reservationUpdated: state.recordReducer.reservationUpdated,
 })
 
 export default connect(mapStateToProps)(RideForm);

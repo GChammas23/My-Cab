@@ -1,8 +1,16 @@
-import { getUserReservation, getUserRides, deletUserData, deleteUserRecord } from '../../actions/rides.action';
+import { getUserReservation, getUserRides, deletUserData, deleteUserRecord, addRide, updateUserReservation } from '../../actions/rides.action';
 
 export const GET_RIDES_STARTED = 'GET_RIDES_STARTED'
 export const GET_RIDES_SUCCESS = 'GET_RIDES_SUCCESS'
 export const GET_RIDES_ERROR = 'GET_RIDES_ERROR'
+
+export const ADD_RIDE_STARTED = 'ADD_RIDE_STARTED'
+export const ADD_RIDE_SUCCESS = 'ADD_RIDE_SUCCESS'
+export const ADD_RIDE_ERROR = 'ADD_RIDE_ERROR'
+
+export const UPDATE_RESERVATION_STARTED = 'UPDATE_RESERVATION_STARTED'
+export const UPDATE_RESERVATION_SUCCESS = 'UPDATE_RESERVATION_SUCCESS'
+export const UPDATE_RESERVATION_ERROR = 'UPDATE_RESERVATION_ERROR'
 
 export const GET_RESERVATIONS_STARTED = 'GET_RESERVATIONS_STARTED'
 export const GET_RESERVATIONS_SUCCESS = 'GET_RESERVATIONS_SUCCESS'
@@ -34,6 +42,38 @@ const recordsAction = {
         } catch (error) {
             dispatch({
                 type: GET_RESERVATIONS_ERROR,
+            });
+        }
+    },
+
+    addRide: (ride) => async (dispatch) => {
+        try {
+            dispatch({
+                type: ADD_RIDE_STARTED,
+            });
+            await addRide(ride);
+            dispatch({
+                type: ADD_RIDE_SUCCESS,
+            });
+        } catch (error) {
+            dispatch({
+                type: ADD_RIDE_ERROR,
+            });
+        }
+    },
+
+    updateReservation: (ride) => async (dispatch) => {
+        try {
+            dispatch({
+                type: UPDATE_RESERVATION_STARTED,
+            });
+            await updateUserReservation(ride);
+            dispatch({
+                type: UPDATE_RESERVATION_SUCCESS,
+            });
+        } catch (error) {
+            dispatch({
+                type: UPDATE_RESERVATION_ERROR,
             });
         }
     },
@@ -81,7 +121,7 @@ const recordsAction = {
             dispatch({
                 type: DELETE_RECORD_STARTED,
             });
-             await deleteUserRecord(data);
+            await deleteUserRecord(data);
             dispatch({
                 type: DELETE_RECORD_SUCCESS,
             });

@@ -17,7 +17,7 @@ class AboutUs extends Component {
                 <NavbarComponent history={this.props.history} />
                 <div className="home-body">
                     <h1>About Us</h1>
-                    <p>My cab is a web application created by Gabriel Chammas on the 20 october 2020. This web application allows
+                    <p>My cab is a web application created by Gabriel Chammas on 20 october 2020. This web application allows
                     it's users to be able to book cab rides straight from their browsers allowing for faster booking and processing.
                     Even though this web app will not be deployed at the moment for optimization and deisgn purposes. We promise to
                     design this app in a more professional way and integrate more features in the application in the future. But for now
