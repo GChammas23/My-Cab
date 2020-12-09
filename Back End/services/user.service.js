@@ -1,6 +1,4 @@
-const { ObjectID } = require("mongodb");
 let db = require("../database");
-const { use } = require("../routes/user.routes");
 
 let client = db.getClient();
 let url = db.getUrl();
@@ -153,9 +151,3 @@ exports.updatePass = (req, response) => {
     })
   })
 };
-
-
-
-
-
-

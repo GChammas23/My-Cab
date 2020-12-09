@@ -49,6 +49,29 @@ exports.getUserRides = (request, response) => {
     });
 };
 
+exports.getUserRidesPrices = (request, response) => {
+    const { username } = request.body;
+
+    client.connect(url, (err, db) => {
+        if (err) throw err;
+        let dbo = db.db(databaseName);
+
+        dbo.collection(collection).find({ user_username: username }, {projection: {_id: 0, ride_price: 1}}).toArray((err, result) => {
+            if (err) {
+                response.status(500).send({ message: "Error occured while fetching price", error: err });
+            }
+            else {
+                let formattedArray = [];
+                for(let i = 0; i < result.length; i++){
+                    formattedArray.push(result[i].ride_price);
+                }
+                response.status(200).send({ message: "Ride price found successfully!", res: formattedArray });
+            }
+        })
+        db.close();
+    })
+};
+
 exports.addRide = (request, response) => {
     const { user_username } = request.body;
     const { start_address } = request.body;

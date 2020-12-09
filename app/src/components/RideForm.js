@@ -3,7 +3,6 @@ import { Button } from 'react-bootstrap';
 import Calendar from 'react-calendar';
 import Footer from './Footer';
 import NavbarComponent from './Navbar';
-import { addRide, updateUserReservation } from '../actions/rides.action';
 import { connect } from 'react-redux';
 import pricesAction from '../redux/actions/prices';
 import recordsAction from '../redux/actions/records';
@@ -100,8 +99,7 @@ class RideForm extends Component {
             this.setState({ proceedDisabled: false });
         }
         else {
-            alert("An error occured while trying to find the price of the ride! \
-            Please make sure that the start and destination addresses are valid");
+            alert("An error occured while trying to find the price of the ride! Please make sure that the start and destination addresses are valid");
         }
 
     }

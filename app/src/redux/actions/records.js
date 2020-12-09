@@ -1,8 +1,20 @@
-import { getUserReservation, getUserRides, deletUserData, deleteUserRecord, addRide, updateUserReservation } from '../../actions/rides.action';
+import {
+    getUserReservation,
+    getUserRides,
+    deletUserData,
+    deleteUserRecord,
+    addRide,
+    updateUserReservation,
+    getUserRidesPrices
+} from '../../actions/rides.action';
 
 export const GET_RIDES_STARTED = 'GET_RIDES_STARTED'
 export const GET_RIDES_SUCCESS = 'GET_RIDES_SUCCESS'
 export const GET_RIDES_ERROR = 'GET_RIDES_ERROR'
+
+export const GET_RIDES_PRICES_STARTED = 'GET_RIDES_PRICES_STARTED'
+export const GET_RIDES_PRICES_SUCCESS = 'GET_RIDES_PRICES_SUCCESS'
+export const GET_RIDES_PRICES_ERROR = 'GET_RIDES_PRICES_ERROR'
 
 export const ADD_RIDE_STARTED = 'ADD_RIDE_STARTED'
 export const ADD_RIDE_SUCCESS = 'ADD_RIDE_SUCCESS'
@@ -42,6 +54,25 @@ const recordsAction = {
         } catch (error) {
             dispatch({
                 type: GET_RESERVATIONS_ERROR,
+            });
+        }
+    },
+
+    getUserRidesPrices: (username) => async (dispatch) => {
+        try {
+            dispatch({
+                type: GET_RIDES_PRICES_STARTED,
+            });
+            let response = await getUserRidesPrices(username);
+            dispatch({
+                type: GET_RIDES_PRICES_SUCCESS,
+                payload: {
+                    data: response.res,
+                }
+            });
+        } catch (error) {
+            dispatch({
+                type: GET_RIDES_PRICES_ERROR,
             });
         }
     },

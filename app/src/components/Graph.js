@@ -4,18 +4,23 @@ import NavBarComponent from './Navbar';
 import Footer from './Footer';
 import { connect } from 'react-redux';
 import ReactApexChart from 'react-apexcharts';
+import recordsAction from '../redux/actions/records';
 
 class Graph extends Component {
     constructor(props) {
         super(props);
+        this.getRidePrices = this.getRidePrices.bind(this);
         this.state = {
             series: [{
-                data: [1, 2, 3, 4, 5, 6, 6, 8, 9, 0, 10]
+                data: [],
             }],
             options: {
                 chart: {
-                    type: 'bar',
+                    type: 'line',
                     height: 350
+                },
+                stroke: {
+                    curve: 'straight',
                 },
                 plotOptions: {
                     bar: {
@@ -29,9 +34,11 @@ class Graph extends Component {
                     text: 'Rides expense chart',
                     align: 'middle'
                 },
-                markers: {
-                    hover: {
-                        sizeOffset: 4
+                yaxis: {
+                    labels: {
+                        formatter: function (value) {
+                            return "$" + value
+                        }
                     }
                 }
             },
@@ -40,6 +47,17 @@ class Graph extends Component {
 
     componentDidMount() {
         let username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
+        this.getRidePrices(username);
+    }
+
+    async getRidePrices(username) {
+        await this.props.dispatch(recordsAction.getUserRidesPrices({ username: username }));
+        this.setState({
+            series: [{
+                name: "Price",
+                data: this.props.ridePrices,
+            }]
+        })
     }
 
 
@@ -53,7 +71,7 @@ class Graph extends Component {
                 </div>
                 <div className="card">
                     <div className="card-body">
-                        <ReactApexChart type="bar" options={this.state.options} series={this.state.series} width={1000} />
+                        <ReactApexChart type="line" options={this.state.options} series={this.state.series} width={1000} />
                     </div>
                 </div>
                 <Footer />
@@ -62,9 +80,9 @@ class Graph extends Component {
     }
 }
 
-/*const mapStateToProps = state => ({
-    values: state.bmiReducer.values,
+const mapStateToProps = state => ({
+    ridePrices: state.recordReducer.ridePrices,
 })
-*/
 
-export default Graph;
+
+export default connect(mapStateToProps)(Graph);

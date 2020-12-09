@@ -8,6 +8,10 @@ import {
     GET_RESERVATIONS_SUCCESS,
     GET_RESERVATIONS_ERROR,
 
+    GET_RIDES_PRICES_STARTED,
+    GET_RIDES_PRICES_SUCCESS,
+    GET_RIDES_PRICES_ERROR,
+
     ADD_RIDE_STARTED,
     ADD_RIDE_SUCCESS,
     ADD_RIDE_ERROR,
@@ -30,6 +34,7 @@ const defaultState = {
     isLoading: false,
     rides: [],
     reservations: [],
+    ridePrices: [],
     dataDeleted: false,
     recordDeleted: false,
     rideAdded: false,
@@ -52,6 +57,22 @@ function recordReducer(state = defaultState, action) {
             return Object.assign({}, state, {
                 isLoading: false,
                 rides: [],
+            });
+
+        case GET_RIDES_PRICES_STARTED:
+            return Object.assign({}, state, {
+                isLoading: true,
+                ridePrices: [],
+            });
+        case GET_RIDES_PRICES_SUCCESS:
+            return Object.assign({}, state, {
+                isLoading: false,
+                ridePrices: action.payload.data,
+            });
+        case GET_RIDES_PRICES_ERROR:
+            return Object.assign({}, state, {
+                isLoading: false,
+                ridePrices: [],
             });
 
         case ADD_RIDE_STARTED:

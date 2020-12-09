@@ -10,6 +10,11 @@ async function getUserRides(data) {
     return await axios.post(url, data).then(response => response.data);
 }
 
+async function getUserRidesPrices(username) {
+    const url = `${baseURLApi}/rides/getUserRidesPrices`;
+    return await axios.post(url, username).then(response => response.data);
+}
+
 async function getUserReservation(data) {
     const url = `${baseURLApi}/rides/getReservations`;
     return await axios.post(url, data).then(response => response.data);
@@ -42,4 +47,5 @@ export {
     deletUserData,
     updateUserReservation,
     getUserReservation,
+    getUserRidesPrices,
 };

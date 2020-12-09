@@ -10,5 +10,6 @@ router.post('/addRide', rides.addRide);
 router.post('/deleteUserData', rides.deletAllUserData);
 router.post('/updateReservation', rides.editUserReservation);
 router.post('/getRides', rides.getUserRides);
+router.post('/getUserRidesPrices', rides.getUserRidesPrices);
 
 module.exports = router
