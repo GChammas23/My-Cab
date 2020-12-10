@@ -4,9 +4,6 @@ import Footer from './Footer';
 import NavbarComponent from './Navbar';
 
 class HomePage extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     bookRide = event => {
         event.preventDefault();

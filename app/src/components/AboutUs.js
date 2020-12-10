@@ -7,10 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 
 class AboutUs extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+    
     render() {
         return (
             <div className="App">

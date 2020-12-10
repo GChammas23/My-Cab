@@ -7,7 +7,7 @@ class ResetPass extends Component {
     constructor(props) {
         super(props);
         this.changePass = this.changePass.bind(this);
-        this.state = { username: '', password: '', confPassword: '' };
+        this.state = { username: '', password: '', confPassword: '', checkPass: false, checkConfPass: false, passType: 'password', confPassType: 'password' };
     }
 
     componentDidMount() {
@@ -23,6 +23,31 @@ class ResetPass extends Component {
     handleConfPasswordChange = event => {
         event.preventDefault();
         this.setState({ confPassword: event.target.value });
+    }
+
+    handlePassBoxChange = async (event) => {
+        if (event.target.name === "seePass") {
+            let checkPass = event.target.checked;
+            this.setState({ checkPass }, () => {
+                if (checkPass) {
+                    this.setState({ passType: "text" });
+                }
+                else {
+                    this.setState({ passType: "password" });
+                }
+            });
+        }
+        else if (event.target.name === "seeConfPass") {
+            let checkConfPass = event.target.checked;
+            this.setState({ checkConfPass }, () => {
+                if (checkConfPass) {
+                    this.setState({ confPassType: "text" });
+                }
+                else {
+                    this.setState({ confPassType: "password" });
+                }
+            })
+        }
     }
 
     async changePass(event) {
@@ -41,6 +66,7 @@ class ResetPass extends Component {
 
                 if (this.props.didUpdate) {
                     alert("Your password has been successfully updated!");
+                    this.props.history.push('/Home');
                 }
                 else {
                     alert("An error occured while trying to update your password");
@@ -68,17 +94,25 @@ class ResetPass extends Component {
                         <form onSubmit={this.changePass} method="POST">
                             <div className="form-group row">
                                 <label className="form-label">Password:</label>
-                                <input className="form-control" type="password" id="password" aria-describedby="passwordHelpBlock" name="password" placeholder='Enter password' required size="10" onChange={this.handlePasswordChange} /><br />
+                                <input className="form-control" type={this.state.passType} id="password" aria-describedby="passwordHelpBlock" name="password" placeholder='Enter password' required size="10" onChange={this.handlePasswordChange} /><br />
                                 <small id="passwordHelpBlock" className="pass-text">
                                     Your password must contain between 8 to 20 characters.
                                 </small>
+                                <label style={{ marginLeft: 525 }}>
+                                    See password:
+                                    <input name="seePass" type="checkbox" checked={this.state.checkPass} onChange={this.handlePassBoxChange} />
+                                </label>
                             </div>
                             <div className="form-group row">
                                 <label className="form-label">Confirm password:</label>
-                                <input className="form-control" type="password" id="confPassword" aria-describedby="confasswordHelpBlock" name="confPassword" placeholder='Confirm password' required size="10" onChange={this.handleConfPasswordChange} /><br />
+                                <input className="form-control" type={this.state.confPassType} id="confPassword" aria-describedby="confasswordHelpBlock" name="confPassword" placeholder='Confirm password' required size="10" onChange={this.handleConfPasswordChange} /><br />
                                 <small id="confpasswordHelpBlock" className="pass-text">
                                     Please make sure to match both passwords!
                                 </small>
+                                <label style={{ marginLeft: 600 }}>
+                                    See password:
+                                    <input name="seeConfPass" type="checkbox" checked={this.state.checkConfPass} onChange={this.handlePassBoxChange} />
+                                </label>
                             </div>
                             <input className="btn bg-primary text-light" type="submit" value="Proceed" />
                         </form>
