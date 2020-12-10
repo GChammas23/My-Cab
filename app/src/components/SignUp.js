@@ -81,9 +81,9 @@ class CreateUser extends Component {
         this.setState({ Password: user.pass });
         this.setState({ ConfPassword: user.pass });
 
-        await this.props.dispatch(actions.getUser(user));
+        await this.props.dispatch(actions.findUsername({username: this.state.Username}));
 
-        if (this.props.isFound) {
+        if (this.props.usernameFound) {
             alert("An account with this google account is already created! please consider logging in instead!");
         }
         else {
