@@ -4,6 +4,7 @@ import NavbarComponent from './Navbar';
 import Footer from './Footer';
 import { connect } from 'react-redux';
 import pricesAction from '../redux/actions/prices';
+
 class PricingsTable extends Component {
     constructor(props) {
         super(props);

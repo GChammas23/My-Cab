@@ -15,7 +15,22 @@ async function getRidePrice(ride) {
     return await axios.post(url, ride).then(response => response.data);
 }
 
+async function getRates(currency) {
+    let url;
+    if(currency === undefined){
+        url = `http://data.fixer.io/api/latest?access_key=9e3b23f081259f8495eb8a8a8becc5e0&format=1`;
+    }
+    else{
+        url = `http://data.fixer.io/api/latest?access_key=9e3b23f081259f8495eb8a8a8becc5e0&format=1&symbols=${currency}`;
+    }
+    console.log(url);
+    return await axios.get(url).then(response => response.data);
+}
+
+
+
 export {
     getPrices,
     getRidePrice,
+    getRates,
 };
