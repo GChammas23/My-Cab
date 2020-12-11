@@ -9,6 +9,7 @@ class RatesPage extends Component {
     constructor(props) {
         super(props);
         this.getAllRates = this.getAllRates.bind(this);
+        this.formatData = this.formatData.bind(this);
         this.state = { data: [], currencyCode: '', buttonDisabled: true };
     }
 
@@ -19,8 +20,23 @@ class RatesPage extends Component {
 
     getAllRates() {
         getRates().then(response => {
-            this.setState({ data: response.rates })
+            this.formatData(response.rates);
         })
+    }
+
+    formatData(data) {
+        let result = [];
+        let fetchedData = Object.entries(data);
+        for (let i = 0; i < fetchedData.length; i++) {
+            for (let j = 0; j < fetchedData[i].length; j += 2) {
+                let rate = {
+                    rate_code: fetchedData[i][j],
+                    rate_value: fetchedData[i][j + 1],
+                }
+                result.push(rate);
+            }
+        }
+        this.setState({data: result});
     }
 
     handleCodeChange = event => {
@@ -33,7 +49,6 @@ class RatesPage extends Component {
                 this.setState({ buttonDisabled: false });
             }
             else if (this.state.currencyCode.localeCompare("")) {
-                console.log("hi");
                 this.getAllRates();
             }
         });
@@ -43,15 +58,10 @@ class RatesPage extends Component {
         event.preventDefault();
         let targetCurrency = this.state.currencyCode;
         getRates(targetCurrency).then(response => {
-            this.setState({ data: response.rates })
+            this.formatData(response.rates);
         }).catch(error => {
             console.log(error);
         })
-    }
-
-    priceFormat(cell, row) {
-        console.log(row);
-        return "$" + cell;
     }
 
     render() {
@@ -75,11 +85,9 @@ class RatesPage extends Component {
                     </InputGroup>
                 </div>
                 <div className="table-bg">
-                    <BootstrapTable data={this.props.prices} striped hover condensed pagination >
-                        <TableHeaderColumn dataField='Price_id' isKey={true}>ID</TableHeaderColumn>
-                        <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
-                        <TableHeaderColumn dataField='dest_address'>Destination address</TableHeaderColumn>
-                        <TableHeaderColumn dataField='price' dataFormat={this.priceFormat} dataSort={true}>Ride price</TableHeaderColumn>
+                    <BootstrapTable data={this.state.data} striped hover condensed pagination >
+                        <TableHeaderColumn dataField='rate_code' isKey={true}>Code</TableHeaderColumn>
+                        <TableHeaderColumn dataField='rate_value'>Value</TableHeaderColumn>
                     </BootstrapTable>
                 </div>
                 <Footer />
