@@ -11,9 +11,7 @@ class Graph extends Component {
         super(props);
         this.getRidePrices = this.getRidePrices.bind(this);
         this.state = {
-            series: [{
-                data: [],
-            }],
+            
             options: {
                 chart: {
                     type: 'line',
@@ -52,12 +50,6 @@ class Graph extends Component {
 
     async getRidePrices(username) {
         await this.props.dispatch(recordsAction.getUserRidesPrices({ username: username }));
-        this.setState({
-            series: [{
-                name: "Price",
-                data: this.props.ridePrices,
-            }]
-        })
     }
 
 
@@ -71,7 +63,7 @@ class Graph extends Component {
                 </div>
                 <div className="card">
                     <div className="card-body">
-                        <ReactApexChart type="line" options={this.state.options} series={this.state.series} width={1000} />
+                        <ReactApexChart type="line" options={this.state.options} series={this.props.ridePrices} width={1000} />
                     </div>
                 </div>
                 <Footer />

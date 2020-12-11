@@ -56,16 +56,17 @@ exports.getUserRidesPrices = (request, response) => {
         if (err) throw err;
         let dbo = db.db(databaseName);
 
-        dbo.collection(collection).find({ user_username: username }, {projection: {_id: 0, ride_price: 1}}).toArray((err, result) => {
+        dbo.collection(collection).find({ user_username: username, ride_date: { $lte: new Date() } }, { projection: { _id: 0, ride_price: 1 } }).toArray((err, result) => {
             if (err) {
                 response.status(500).send({ message: "Error occured while fetching price", error: err });
             }
             else {
                 let formattedArray = [];
-                for(let i = 0; i < result.length; i++){
+                for (let i = 0; i < result.length; i++) {
                     formattedArray.push(result[i].ride_price);
                 }
-                response.status(200).send({ message: "Ride price found successfully!", res: formattedArray });
+                let series = [{ data: formattedArray }];
+                response.status(200).send({ message: "Ride price found successfully!", res: series });
             }
         })
         db.close();
