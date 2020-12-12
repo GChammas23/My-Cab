@@ -23,7 +23,11 @@ async function getRates(currency) {
     else{
         url = `http://data.fixer.io/api/latest?access_key=9e3b23f081259f8495eb8a8a8becc5e0&format=1&symbols=${currency}`;
     }
-    console.log(url);
+    return await axios.get(url).then(response => response.data);
+}
+
+async function getSymbols() {
+    const url = `http://data.fixer.io/api/symbols?access_key=9e3b23f081259f8495eb8a8a8becc5e0`;
     return await axios.get(url).then(response => response.data);
 }
 
@@ -33,4 +37,5 @@ export {
     getPrices,
     getRidePrice,
     getRates,
+    getSymbols,
 };

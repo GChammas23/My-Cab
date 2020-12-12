@@ -89,22 +89,6 @@ exports.create = (req, response) => {
   })
 };
 
-exports.getUsers = (req, res) => {
-  client.connect(url, (err, db) => {
-    if (err) throw err;
-    let dbo = db.db(databaseName);
-    dbo.collection(collectionName).find({}).toArray((err, result) => {
-      if (err) {
-        res.status(500).send({ message: "Could not fetch users" });
-      }
-      else {
-        res.status(200).send({ data: result, message: "Users fetched successfully" });
-      }
-      db.close();
-    });
-  });
-};
-
 exports.deleteUser = (req, res) => {
   const { username } = req.body;
   const { pass } = req.body;
