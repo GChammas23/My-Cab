@@ -37,8 +37,16 @@ class ReusableDropdown extends Component {
     }
 
     render() {
+        let dropdown;
+        if (this.props.selectedItem !== undefined) {
+            dropdown = <select style={{ width: this.state.width }} onChange={this.handleSelectChange} value={this.props.selectedItem}>{this.state.dropDownData}</select>
+
+        }
+        else {
+            dropdown = <select style={{ width: this.state.width }} onChange={this.handleSelectChange}>{this.state.dropDownData}</select>
+        }
         return (
-            <select style={{ width: this.state.width }} onChange={this.handleSelectChange} value={this.props.selectedItem || ""}>{this.state.dropDownData}</select>
+            dropdown
         )
     }
 }
