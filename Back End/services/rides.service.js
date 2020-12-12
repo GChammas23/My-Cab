@@ -79,6 +79,7 @@ exports.addRide = (request, response) => {
     const { destination_address } = request.body;
     const { ride_price } = request.body;
     const { ride_date } = request.body;
+    const { ride_driver } = request.body;
 
     let ride = {
         user_username: user_username,
@@ -86,6 +87,7 @@ exports.addRide = (request, response) => {
         destination_address: destination_address,
         ride_price: ride_price,
         ride_date: new Date(ride_date),
+        ride_driver: ride_driver,
     };
 
     client.connect(url, (err, db) => {
@@ -155,7 +157,7 @@ exports.editUserReservation = (request, response) => {
     const { ride_price } = request.body;
     const { ride_date } = request.body;
 
-    
+
 
     client.connect(url, (err, db) => {
         if (err) throw err;

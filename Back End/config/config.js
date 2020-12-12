@@ -3,7 +3,7 @@ var config = {
   NODE_ENV: 'development',
   HOST: 'localhost',
   DB: 'mydb',
-  Collection: ['Users', 'Pricings', 'Rides'],
+  Collection: ['Users', 'Pricings', 'Rides', 'drivers'],
 }
 
 module.exports = { config: config };

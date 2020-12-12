@@ -36,4 +36,8 @@ module.exports = {
     return db_config.collection[2];
   },
 
+  getDriversCollection: function () {
+    return db_config.collection[3];
+  }
+
 };

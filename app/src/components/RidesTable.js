@@ -69,6 +69,7 @@ class RidesTable extends Component {
                         <TableHeaderColumn dataField='destination_address'>Destination address</TableHeaderColumn>
                         <TableHeaderColumn dataField='ride_date' dataFormat={this.dateFormat} dataSort={true}>Ride date</TableHeaderColumn>
                         <TableHeaderColumn dataField='ride_price' dataFormat={this.priceFormat}>Ride price</TableHeaderColumn>
+                        <TableHeaderColumn dataField='ride_driver'>Driver</TableHeaderColumn>
                         <TableHeaderColumn dataFormat={this.deleteFormat}>Delete</TableHeaderColumn>
                     </BootstrapTable>
                 </div>

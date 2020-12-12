@@ -6,6 +6,8 @@ import NavbarComponent from './Navbar';
 import { connect } from 'react-redux';
 import pricesAction from '../redux/actions/prices';
 import recordsAction from '../redux/actions/records';
+import { getDrivers } from '../actions/drivers.action';
+import ReusableDropdown from './ReusableDropdown';
 
 
 class RideForm extends Component {
@@ -17,7 +19,8 @@ class RideForm extends Component {
         this.state = {
             operation: null, object: null,
             username: '', start: '', dest: '', price: 0,
-            ride_date: new Date(), today_date: new Date(), maxDate: new Date(), proceedDisabled: true,
+            ride_date: new Date(), today_date: new Date(), maxDate: new Date(), proceedDisabled: true, selectedDriver: '',
+            drivers: [],
         };
     }
 
@@ -30,6 +33,7 @@ class RideForm extends Component {
             this.setState({ start: this.props.location.state.data.start_address });
             this.setState({ dest: this.props.location.state.data.destination_address });
             this.setState({ price: this.props.location.state.data.ride_price });
+            this.setState({ selectedDriver: this.props.location.state.data.ride_driver });
             //this.setState({ride_date: this.props.location.state.data.ride_date});
         }
 
@@ -37,6 +41,15 @@ class RideForm extends Component {
 
         //Set max date
         this.state.maxDate.setDate(this.state.today_date.getDate() + 7);
+
+        getDrivers().then(response => {
+            let result = response.res;
+            let drivers = [];
+            for (let i = 0; i < result.length; i++) {
+                drivers.push(result[i].driver_name);
+            }
+            this.setState({ drivers });
+        })
     }
 
 
@@ -54,6 +67,10 @@ class RideForm extends Component {
         });
     }
 
+    handleDriverChange = (selectedDriver) => {
+        this.setState({ selectedDriver })
+    }
+
     changeDate = date => {
         this.setState({ ride_date: date })
     }
@@ -64,23 +81,30 @@ class RideForm extends Component {
         const { dest } = this.state;
         const { ride_date } = this.state;
         const { username } = this.state;
+        const { selectedDriver } = this.state;
         const price = this.props.ridePrice;
 
-        let ride = {
-            start_address: start,
-            destination_address: dest,
-            ride_price: price,
-            user_username: username,
-            ride_date: ride_date,
-        }
-
-        await this.props.dispatch(recordsAction.addRide(ride));
-
-        if (this.props.rideAdded) {
-            alert("You successfully booked a ride with us. See you soon!")
+        if (selectedDriver.length === 0) {
+            alert("Please make sure to select a driver before proceeding")
         }
         else {
-            alert("An error occured while trying to add a ride. Please try again")
+            let ride = {
+                start_address: start,
+                destination_address: dest,
+                ride_price: price,
+                user_username: username,
+                ride_date: ride_date,
+                ride_driver: selectedDriver,
+            }
+
+            await this.props.dispatch(recordsAction.addRide(ride));
+
+            if (this.props.rideAdded) {
+                alert("You successfully booked a ride with us. See you soon!")
+            }
+            else {
+                alert("An error occured while trying to add a ride. Please try again")
+            }
         }
 
     }
@@ -124,10 +148,10 @@ class RideForm extends Component {
 
         await this.props.dispatch(recordsAction.updateReservation(ride));
 
-        if(this.props.reservationUpdated){
+        if (this.props.reservationUpdated) {
             alert("Your reservation has been successfully updated!")
         }
-        else{
+        else {
             alert("An error occured while trying to update your reservation");
         }
 
@@ -136,6 +160,7 @@ class RideForm extends Component {
     render() {
         let button;
         let lable;
+        let dropdown;
         //Dynamic rendering
         if (this.state.operation === "edit") {
             button = <input className="btn bg-primary text-light" type="submit" value="Edit" disabled={this.state.proceedDisabled} onClick={this.editRide} />
@@ -144,6 +169,9 @@ class RideForm extends Component {
         else {
             button = <input className="btn bg-primary text-light" type="submit" value="Proceed" disabled={this.state.proceedDisabled} onClick={this.insertNewRide} />
             lable = <h1>Book a ride</h1>
+        }
+        if (this.state.drivers.length != 0) {
+            dropdown = <ReusableDropdown data={this.state.drivers} width="1100" defaultOption="Choose a driver" onChange={this.handleDriverChange} selectedItem={this.state.selectedDriver || ""}></ReusableDropdown>
         }
         return (
             <div className="App">
@@ -165,6 +193,9 @@ class RideForm extends Component {
                                 <input className="form-control" type="text" id="destination" name="destination" placeholder='Enter the location you want to go to' onChange={this.handleDestAddress} value={this.state.dest || ""} required size="10" /><br />
                             </div>
                             <Calendar className="calendar" onChange={this.changeDate} value={this.state.ride_date} minDate={this.state.today_date} maxDate={this.state.maxDate} />
+                            <div className="form-group row">
+                                {dropdown}
+                            </div>
                             <Button onClick={this.checkPrice} style={{ marginTop: "20px" }}>Check ride price</Button>
                             <div className="form-group row">
                                 <label className="form-label">Ride price:</label>

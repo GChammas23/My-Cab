@@ -84,6 +84,7 @@ class Reservations extends Component {
                         <TableHeaderColumn dataField='destination_address'>Destination</TableHeaderColumn>
                         <TableHeaderColumn dataField='ride_date' dataFormat={this.dateFormat} dataSort={true}>Ride Date</TableHeaderColumn>
                         <TableHeaderColumn dataField="ride_price" dataFormat={this.priceFormat} dataSort={true}>Ride price</TableHeaderColumn>
+                        <TableHeaderColumn dataField="ride_driver">Driver</TableHeaderColumn>
                         <TableHeaderColumn dataFormat={this.editFormat}>Edit</TableHeaderColumn>
                         <TableHeaderColumn dataFormat={this.deleteFormat}>Delete</TableHeaderColumn>
                     </BootstrapTable>

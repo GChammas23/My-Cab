@@ -25,5 +25,8 @@ app.use('/api/rides', RideRoutes);
 var PriceRoutes = require('./routes/prices.routes');
 app.use('/api/prices', PriceRoutes);
 
+var DriverRoutes = require('./routes/drivers.routes');
+app.use('/api/drivers', DriverRoutes);
+
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
