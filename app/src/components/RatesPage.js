@@ -3,24 +3,32 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import NavbarComponent from './Navbar';
 import Footer from './Footer';
 import { InputGroup, FormControl, Button } from 'react-bootstrap'
-import { getRates } from '../actions/prices.action';
+import { getRates, getSymbols } from '../actions/prices.action';
 
 class RatesPage extends Component {
     constructor(props) {
         super(props);
         this.getAllRates = this.getAllRates.bind(this);
         this.formatData = this.formatData.bind(this);
+        this.getAllSymbols = this.getAllSymbols.bind(this);
         this.state = { data: [], currencyCode: '', buttonDisabled: true };
     }
 
     componentDidMount() {
         //Fill up the data array in state
         this.getAllRates();
+        this.getAllSymbols();
     }
 
     getAllRates() {
         getRates().then(response => {
             this.formatData(response.rates);
+        })
+    }
+
+    getAllSymbols(){
+        getSymbols().then(response => {
+            console.log(response.symbols);
         })
     }
 

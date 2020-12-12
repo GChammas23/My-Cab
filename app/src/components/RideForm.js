@@ -117,7 +117,7 @@ class RideForm extends Component {
             destination_address: dest,
             ride_price: price,
             username: username,
-            ride_date: ride_date
+            ride_date: new Date(ride_date)
         }
 
         console.log(ride);

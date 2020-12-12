@@ -155,18 +155,14 @@ exports.editUserReservation = (request, response) => {
     const { ride_price } = request.body;
     const { ride_date } = request.body;
 
-    console.log(username);
-    console.log(start_address);
-    console.log(destination_address);
-    console.log(ride_date);
-    console.log(ride_price);
+    
 
     client.connect(url, (err, db) => {
         if (err) throw err;
 
         let whereClause = { user_username: username };
 
-        let newValues = { $set: { start_address: start_address, destination_address: destination_address, ride_price: ride_price, ride_date: ride_date } };
+        let newValues = { $set: { start_address: start_address, destination_address: destination_address, ride_price: ride_price, ride_date: new Date(ride_date) } };
 
         let dbo = db.db(databaseName);
         dbo.collection(collection).updateOne(whereClause, newValues, (err, result) => {
