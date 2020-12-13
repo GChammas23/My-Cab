@@ -23,7 +23,7 @@ class ReusableDropdown extends Component {
     fillDropdown() {
         const { data } = this.props;
         let dropDownData = [];
-        data[0] = this.props.defaultOption;
+        data.unshift(this.props.defaultOption);
         for (let i = 0; i < data.length; i++) {
             if (i === 0) {
                 dropDownData.push(<option key={i} value="">{data[i]}</option>);
@@ -32,6 +32,7 @@ class ReusableDropdown extends Component {
                 dropDownData.push(<option key={i} value={data[i]}>{data[i]}</option>);
             }
         }
+        console.log(dropDownData);
         this.setState({ dropDownData })
     }
 
