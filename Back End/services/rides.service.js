@@ -1,4 +1,3 @@
-const { response, request } = require("express");
 const { ObjectID } = require("mongodb");
 let db = require("../database");
 
@@ -156,6 +155,7 @@ exports.editUserReservation = (request, response) => {
     const { destination_address } = request.body;
     const { ride_price } = request.body;
     const { ride_date } = request.body;
+    const { ride_driver } = request.body;
 
 
 
@@ -164,7 +164,7 @@ exports.editUserReservation = (request, response) => {
 
         let whereClause = { user_username: username };
 
-        let newValues = { $set: { start_address: start_address, destination_address: destination_address, ride_price: ride_price, ride_date: new Date(ride_date) } };
+        let newValues = { $set: { start_address: start_address, destination_address: destination_address, ride_price: ride_price, ride_date: new Date(ride_date), ride_driver: ride_driver } };
 
         let dbo = db.db(databaseName);
         dbo.collection(collection).updateOne(whereClause, newValues, (err, result) => {

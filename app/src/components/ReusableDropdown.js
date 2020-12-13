@@ -32,7 +32,6 @@ class ReusableDropdown extends Component {
                 dropDownData.push(<option key={i} value={data[i]}>{data[i]}</option>);
             }
         }
-        console.log(dropDownData);
         this.setState({ dropDownData })
     }
 

@@ -135,13 +135,15 @@ class RideForm extends Component {
         const { ride_date } = this.state;
         const { username } = this.state;
         const { price } = this.state;
+        const { selectedDriver } = this.state;
 
         let ride = {
             start_address: start,
             destination_address: dest,
             ride_price: price,
             username: username,
-            ride_date: new Date(ride_date)
+            ride_date: new Date(ride_date),
+            ride_driver: selectedDriver,
         }
 
         console.log(ride);
@@ -170,7 +172,7 @@ class RideForm extends Component {
             button = <input className="btn bg-primary text-light" type="submit" value="Proceed" disabled={this.state.proceedDisabled} onClick={this.insertNewRide} />
             lable = <h1>Book a ride</h1>
         }
-        if (this.state.drivers.length != 0) {
+        if (this.state.drivers.length !== 0) {
             dropdown = <ReusableDropdown data={this.state.drivers} width="1100" defaultOption="Choose a driver" onChange={this.handleDriverChange} selectedItem={this.state.selectedDriver || ""}></ReusableDropdown>
         }
         return (
