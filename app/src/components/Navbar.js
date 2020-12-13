@@ -44,7 +44,7 @@ class NavbarComponent extends Component {
                         <Nav.Link href="/Rides">My rides</Nav.Link>
                         <Nav.Link href="/Expenses">My expenses</Nav.Link>
                         <Nav.Link href="/Pricings">Pricings</Nav.Link>
-                        <Nav.Link href="/Rates">Price rates</Nav.Link>
+                        <Nav.Link href="/Rates">Currency rates</Nav.Link>
                         <NavDropdown title="Account" id="basic-nav-dropdown">
                             <NavDropdown.Item>{this.state.username}</NavDropdown.Item>
                             <NavDropdown.Item href="/ResetPassword">Change password</NavDropdown.Item>
