@@ -78,44 +78,30 @@ class ReusableTable extends Component {
         });
     }
 
-    /*deleteReservation(data) {
-        console.log(data);
-        this.props.history.push("/Delete", {
-            type: "reservation",
-            data: data,
-        });
-    }
-    */
-
     render() {
-        let table;
+        let data;
+        let editRow;
         if (this.props.table === "rides") {
-            table =
-                <BootstrapTable data={this.props.rides} striped hover condensed pagination search>
-                    <TableHeaderColumn isKey={true} dataField='_id'>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
-                    <TableHeaderColumn dataField='destination_address'>Destination address</TableHeaderColumn>
-                    <TableHeaderColumn dataField='ride_date' dataFormat={this.dateFormat} dataSort={true}>Ride date</TableHeaderColumn>
-                    <TableHeaderColumn dataField='ride_price' dataFormat={this.priceFormat}>Ride price</TableHeaderColumn>
-                    <TableHeaderColumn dataField='ride_driver'>Driver</TableHeaderColumn>
-                    <TableHeaderColumn dataFormat={this.deleteFormat}>Delete</TableHeaderColumn>
-                </BootstrapTable>
+            data = this.props.rides;
+
         }
         else if (this.props.table === "reservations") {
-            table =
-                <BootstrapTable data={this.props.reservations} striped hover condensed pagination search >
-                    <TableHeaderColumn dataField='_id' isKey={true}>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
-                    <TableHeaderColumn dataField='destination_address'>Destination</TableHeaderColumn>
-                    <TableHeaderColumn dataField='ride_date' dataFormat={this.dateFormat} dataSort={true}>Ride Date</TableHeaderColumn>
-                    <TableHeaderColumn dataField="ride_price" dataFormat={this.priceFormat} dataSort={true}>Ride price</TableHeaderColumn>
-                    <TableHeaderColumn dataField="ride_driver">Driver</TableHeaderColumn>
-                    <TableHeaderColumn dataFormat={this.editFormat}>Edit</TableHeaderColumn>
-                    <TableHeaderColumn dataFormat={this.deleteFormat}>Delete</TableHeaderColumn>
-                </BootstrapTable>
+            data = this.props.reservations;
+        }
+        if (this.props.isEditable === "true"){
+            editRow = <TableHeaderColumn dataFormat={this.editFormat}>Edit</TableHeaderColumn>
         }
         return (
-            table
+            <BootstrapTable data={data} striped hover condensed pagination search>
+                <TableHeaderColumn isKey={true} dataField='_id'>ID</TableHeaderColumn>
+                <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
+                <TableHeaderColumn dataField='destination_address'>Destination address</TableHeaderColumn>
+                <TableHeaderColumn dataField='ride_date' dataFormat={this.dateFormat} dataSort={true}>Ride date</TableHeaderColumn>
+                <TableHeaderColumn dataField='ride_price' dataFormat={this.priceFormat}>Ride price</TableHeaderColumn>
+                <TableHeaderColumn dataField='ride_driver'>Driver</TableHeaderColumn>
+                {editRow}
+                <TableHeaderColumn dataFormat={this.deleteFormat}>Delete</TableHeaderColumn>
+            </BootstrapTable>
         )
     }
 }

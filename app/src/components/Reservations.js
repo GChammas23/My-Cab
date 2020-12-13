@@ -21,7 +21,7 @@ class Reservations extends Component {
                     <p>Check your upcoming reservations you have with us! You can sort the reservations by date or price.</p>
                 </div>
                 <div className="table-bg">
-                    <ReusableTable table="reservations" history={this.props.history}></ReusableTable>
+                    <ReusableTable table="reservations" history={this.props.history} isEditable="true"></ReusableTable>
                 </div>
                 <Footer />
             </div>
