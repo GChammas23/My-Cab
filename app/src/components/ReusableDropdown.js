@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import '../App.css';
 
 class ReusableDropdown extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.fillDropdown = this.fillDropdown.bind(this);
         this.state = { dropDownData: [], width: 0 };
     }

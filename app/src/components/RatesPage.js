@@ -92,7 +92,7 @@ class RatesPage extends Component {
     render() {
         let dropdown;
         if (this.state.symbols.length !== 0) {
-            dropdown = <ReusableDropdown data={this.state.symbols} defaultOption="Choose a currency" width='1000' onChange={this.handleSymbolChange}></ReusableDropdown>
+            dropdown = <ReusableDropdown data={this.state.symbols} defaultOption="All currencies" width='1000' onChange={this.handleSymbolChange}></ReusableDropdown>
         }
         return (
             <div className="App">
