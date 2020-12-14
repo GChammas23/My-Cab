@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import '../App.css';
-import { connect } from 'react-redux';
-import recordsAction from '../redux/actions/records';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Button } from 'react-bootstrap';
 let moment = require('moment');
 
@@ -10,105 +7,88 @@ let moment = require('moment');
 class ReusableTable extends Component {
     constructor(props) {
         super(props);
-        this.dateFormat = this.dateFormat.bind(this);
-        this.priceFormat = this.priceFormat.bind(this);
+        this.getColumnNames = this.getColumnNames.bind(this);
         this.deleteRecord = this.deleteRecord.bind(this);
-        this.deleteFormat = this.deleteFormat.bind(this);
-        this.editFormat = this.editFormat.bind(this);
-        this.getRides = this.getRides.bind(this);
-        this.getReservations = this.getReservations.bind(this);
         this.editRecord = this.editRecord.bind(this);
-        this.state = { username: '' };
+        this.state = { username: '', headers: [], data: [] };
     }
 
     componentDidMount() {
-        let tableName = this.props.table;
-        let user_username = localStorage.getItem("username") ? localStorage.getItem("username") : sessionStorage.getItem("username");
-        this.setState({ username: user_username }, () => {
-            if (tableName === "rides") {
-                this.getRides();
-            }
-            else if (tableName === "reservations") {
-                this.getReservations();
-            }
-        });
-    }
-
-    dateFormat(cell) {
-        return moment(cell).format("YYYY-MM-DD");
-    }
-
-    priceFormat(cell) {
-        return "$" + cell;
-    }
-
-    async getRides() {
-        await this.props.dispatch(recordsAction.getUserRides({ user_username: this.state.username }));
-    }
-
-    async getReservations() {
-        await this.props.dispatch(recordsAction.getUserReservations({ user_username: this.state.username }));
-    }
-
-    deleteFormat(cell, row) {
-        return (
-            <Button className="btn btn-danger" size="xs" onClick={() => this.deleteRecord(row)}>Delete</Button>
-        )
-    }
-
-    editFormat(cell, row) {
-        return (
-            <Button className="btn btn-info" size="xs" onClick={() => this.editRecord(row)}>Edit</Button>
-        )
-
-    }
-
-    editRecord(data) {
-        this.props.history.push("/RideForm", {
-            operation: "edit",
-            data: data,
+        let data = this.props.data;
+        this.setState({ data }, () => {
+            this.getColumnNames();
         })
     }
 
-    deleteRecord(data) {
-        console.log(data);
+    getColumnNames() {
+        let headers = Object.keys(this.state.data[0]);
+        this.setState({ headers });
+    }
+
+    deleteRecord(obj) {
+        console.log(obj);
         this.props.history.push("/Delete", {
-            type: (this.props.table === "rides") ? "rides" : "reservation",
-            data: data,
-        });
+            type: (this.props.type === "ride") ? "ride" : "reservation",
+            data: obj,
+        })
+    }
+
+    editRecord(obj) {
+        console.log(obj);
+        this.props.history.push("/RideForm", {
+            operation: "edit",
+            data: obj,
+        })
     }
 
     render() {
-        let data;
-        let editRow;
-        if (this.props.table === "rides") {
-            data = this.props.rides;
+        let headerRows = [];
+        let dataRows = [];
+        let editRow, editHeader;
+
+        if (this.props.isEditable === true) {
+            editHeader = <th>Edit</th>
+        }
+
+        this.state.headers.forEach((element, key) => {
+            if (element !== "user_username") {
+                headerRows.push(<th key={key}>{element}</th>)
+            }
+        });
+        if (editHeader !== undefined) {
+            headerRows.push(editHeader)
+        }
+        headerRows.push(<th key={headerRows.length + 1}>Delete</th>)
+
+        for (let i = 0; i < this.state.data.length; i++) {
+            const element = this.state.data[i];
+            if (this.props.isEditable === true) {
+                editRow = <td><Button className="btn btn-primary" size="xs" onClick={() => this.editRecord(element)}>Edit</Button></td>
+            }
+            dataRows.push(<tr key={i}>
+                <td>{element._id}</td>
+                <td>{element.start_address}</td>
+                <td>{element.destination_address}</td>
+                <td>{"$" + element.ride_price}</td>
+                <td>{moment(element.ride_date).format("DD-MM-YYYY")}</td>
+                <td>{element.ride_driver}</td>
+                {editRow}
+                <td><Button className="btn btn-danger" size="xs" onClick={() => this.deleteRecord(element)}>Delete</Button></td>
+            </tr>)
 
         }
-        else if (this.props.table === "reservations") {
-            data = this.props.reservations;
-        }
-        if (this.props.isEditable === "true"){
-            editRow = <TableHeaderColumn dataFormat={this.editFormat}>Edit</TableHeaderColumn>
-        }
+
         return (
-            <BootstrapTable data={data} striped hover condensed pagination search>
-                <TableHeaderColumn isKey={true} dataField='_id'>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField='start_address'>Start address</TableHeaderColumn>
-                <TableHeaderColumn dataField='destination_address'>Destination address</TableHeaderColumn>
-                <TableHeaderColumn dataField='ride_date' dataFormat={this.dateFormat} dataSort={true}>Ride date</TableHeaderColumn>
-                <TableHeaderColumn dataField='ride_price' dataFormat={this.priceFormat}>Ride price</TableHeaderColumn>
-                <TableHeaderColumn dataField='ride_driver'>Driver</TableHeaderColumn>
-                {editRow}
-                <TableHeaderColumn dataFormat={this.deleteFormat}>Delete</TableHeaderColumn>
-            </BootstrapTable>
+            <table className="Table">
+                <thead>
+                    <tr className="Table-header">
+                        {headerRows}
+                    </tr>
+                </thead>
+                {dataRows}
+            </table>
         )
     }
 }
 
-const mapStateToProps = state => ({
-    rides: state.recordReducer.rides,
-    reservations: state.recordReducer.reservations,
-})
-
-export default connect(mapStateToProps)(ReusableTable);
+export default ReusableTable;

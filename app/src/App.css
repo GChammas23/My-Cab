@@ -45,6 +45,20 @@ body{
   margin-top: 90px;
 }
 
+.Table-header{
+  background-color: #ccc;
+  color:black;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.Table{
+  width: 100%;
+  border: 1px solid black;
+  text-align: center;
+}
+
 #logo_image {
   margin-top: 30px;
 }
