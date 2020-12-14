@@ -38,7 +38,7 @@ const defaultState = {
     dataDeleted: false,
     recordDeleted: false,
     rideAdded: false,
-    reservationUpdated: true,
+    reservationUpdated: false,
 };
 
 function recordReducer(state = defaultState, action) {

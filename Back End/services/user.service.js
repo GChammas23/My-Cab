@@ -43,7 +43,7 @@ exports.findUsername = (request, response) => {
   client.connect(url, (err, db) => {
     if (err) throw err;
     let dbo = db.db(databaseName);
-    dbo.collection(collectionName).find({username: username}).toArray(function (err, result) {
+    dbo.collection(collectionName).find({ username: username }).toArray(function (err, result) {
       if (err) {
         response.status(500).send({ message: "An error occured while trying to find the account" });
       }
@@ -110,6 +110,7 @@ exports.deleteUser = (req, res) => {
   })
 
 };
+
 
 exports.updatePass = (req, response) => {
   const { password } = req.body;

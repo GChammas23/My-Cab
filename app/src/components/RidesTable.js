@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import recordsAction from '../redux/actions/records';
 import ReusableTable from './ReusableTable';
 
-let moment = require('moment');
-
 class RidesTable extends Component {
     constructor(props) {
         super(props);
