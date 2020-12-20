@@ -1,2 +1,2 @@
 # MyCab
-This is the midterm project for the advances course from Gabriel Chammas
+This is the final project for the advances course from Gabriel Chammas
